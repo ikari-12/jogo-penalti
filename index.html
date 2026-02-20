@@ -2,26 +2,20 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jogo de Pênalti PRO Mobile</title>
+<title>Pênalti PRO Mobile</title>
 
 <style>
 body{
     margin:0;
     text-align:center;
-    font-family:Arial, sans-serif;
+    font-family:Arial;
     background:linear-gradient(to top,#2ecc71 70%,#87ceeb 30%);
     overflow:hidden;
 }
 
-h1{
-    color:white;
-    font-size:6vw;
-}
+h1{color:white;font-size:6vw;}
 
-#placar{
-    font-size:5vw;
-    color:yellow;
-}
+#placar{font-size:5vw;color:yellow;}
 
 #meta{
     color:white;
@@ -49,6 +43,18 @@ h1{
     border-right:4px solid white;
     border-top:4px solid white;
 }
+
+.opcao{
+    position:absolute;
+    top:8vh;
+    font-size:6vw;
+    font-weight:bold;
+    color:white;
+    display:none;
+}
+
+#nao{ left:25%; }
+#sim{ right:25%; }
 
 .goleiro{
     position:absolute;
@@ -79,10 +85,6 @@ h1{
     left:47%;
     font-size:10vw;
     transition:0.4s;
-}
-
-.botoes{
-    margin-top:10px;
 }
 
 button{
@@ -137,6 +139,9 @@ button{
 <div class="campo">
     <div class="gol"></div>
 
+    <div class="opcao" id="nao">NÃO</div>
+    <div class="opcao" id="sim">SIM</div>
+
     <div class="goleiro" id="goleiro">
         <div class="cabeca"></div>
         <div class="corpo"></div>
@@ -145,7 +150,7 @@ button{
     <div class="bola" id="bola">⚽</div>
 </div>
 
-<div class="botoes">
+<div>
     <button onclick="chutar('esquerda')">Esquerda</button>
     <button onclick="chutar('centro')">Centro</button>
     <button onclick="chutar('direita')">Direita</button>
@@ -164,6 +169,8 @@ const goleiro=document.getElementById("goleiro");
 const bola=document.getElementById("bola");
 const meta=document.getElementById("meta");
 const resultado=document.getElementById("resultado");
+const nao=document.getElementById("nao");
+const sim=document.getElementById("sim");
 
 function criarConfetes(){
     setInterval(()=>{
@@ -188,6 +195,8 @@ function atualizar(){
     if(gols>=10 && !modoPergunta){
         modoPergunta=true;
         meta.innerHTML="VOCÊ ACEITA SER NOSSO PARANINFO?";
+        nao.style.display="block";
+        sim.style.display="block";
     }
 }
 
@@ -220,7 +229,7 @@ function chutar(dir){
         if(modoPergunta){
 
             if(dir==="esquerda"){
-                resultado.innerHTML="Não aceitamos NÃO como resposta  😏";
+                resultado.innerHTML="Não aceitamos NÃO como resposta";
             }else{
                 document.getElementById("vencedor").style.display="block";
                 criarConfetes();
