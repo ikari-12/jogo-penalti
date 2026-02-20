@@ -1,76 +1,153 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Jogo de Pênalti</title>
+    <title>Jogo de Pênalti Animado</title>
     <style>
         body {
             text-align: center;
             font-family: Arial;
-            background-color: #2ecc71;
-            color: white;
+            background: linear-gradient(to top, #2ecc71 70%, #87ceeb 30%);
+            margin: 0;
+            overflow: hidden;
         }
 
         h1 {
-            margin-top: 20px;
+            margin-top: 10px;
+            color: white;
         }
 
         .campo {
-            margin-top: 30px;
+            position: relative;
+            width: 600px;
+            height: 400px;
+            margin: auto;
+            border: 3px solid white;
+            border-bottom: none;
+            background-color: #27ae60;
+        }
+
+        .gol {
+            position: absolute;
+            top: 20px;
+            left: 150px;
+            width: 300px;
+            height: 120px;
+            border: 5px solid white;
+        }
+
+        .goleiro {
+            position: absolute;
+            top: 80px;
+            left: 260px;
+            font-size: 50px;
+            transition: 0.5s;
+        }
+
+        .bola {
+            position: absolute;
+            bottom: 20px;
+            left: 280px;
+            font-size: 40px;
+            transition: 0.5s;
+        }
+
+        .botoes {
+            margin-top: 20px;
         }
 
         button {
             padding: 10px 20px;
-            margin: 10px;
             font-size: 18px;
+            margin: 5px;
             cursor: pointer;
         }
 
         #resultado {
             font-size: 24px;
-            margin-top: 20px;
-        }
-
-        #placar {
-            font-size: 22px;
             margin-top: 10px;
+            color: white;
         }
     </style>
 </head>
 <body>
 
-    <h1>⚽ Jogo de Pênalti</h1>
+<h1>⚽ Jogo de Pênalti Animado</h1>
 
-    <div class="campo">
-        <p>Escolha onde chutar:</p>
+<div class="campo">
+    <div class="gol"></div>
+    <div class="goleiro" id="goleiro">🧤</div>
+    <div class="bola" id="bola">⚽</div>
+</div>
 
-        <button onclick="chutar('esquerda')">Esquerda</button>
-        <button onclick="chutar('centro')">Centro</button>
-        <button onclick="chutar('direita')">Direita</button>
-    </div>
+<div class="botoes">
+    <button onclick="chutar('esquerda')">Esquerda</button>
+    <button onclick="chutar('centro')">Centro</button>
+    <button onclick="chutar('direita')">Direita</button>
+</div>
 
-    <div id="resultado"></div>
-    <div id="placar">Gols: 0 | Defesas: 0</div>
+<div id="resultado"></div>
 
 <script>
 
-let gols = 0;
-let defesas = 0;
+let bloqueado = false;
 
-function chutar(direcaoJogador) {
+function chutar(direcaoJogador){
+
+    if(bloqueado) return;
+    bloqueado = true;
+
+    let goleiro = document.getElementById("goleiro");
+    let bola = document.getElementById("bola");
+    let resultado = document.getElementById("resultado");
 
     let opcoes = ['esquerda', 'centro', 'direita'];
-    let direcaoGoleiro = opcoes[Math.floor(Math.random() * 3)];
+    let direcaoGoleiro = opcoes[Math.floor(Math.random()*3)];
 
-    if(direcaoJogador === direcaoGoleiro){
-        defesas++;
-        document.getElementById("resultado").innerHTML = "🧤 O goleiro defendeu!";
-    } else {
-        gols++;
-        document.getElementById("resultado").innerHTML = "⚽ GOOOOOL!";
-    }
+    // Reset posição
+    goleiro.style.left = "260px";
+    bola.style.left = "280px";
+    bola.style.bottom = "20px";
+    resultado.innerHTML = "";
 
-    document.getElementById("placar").innerHTML =
-        "Gols: " + gols + " | Defesas: " + defesas;
+    setTimeout(() => {
+
+        // Movimento da bola
+        if(direcaoJogador === "esquerda"){
+            bola.style.left = "200px";
+        }
+        if(direcaoJogador === "centro"){
+            bola.style.left = "280px";
+        }
+        if(direcaoJogador === "direita"){
+            bola.style.left = "360px";
+        }
+
+        bola.style.bottom = "250px";
+
+        // Movimento do goleiro
+        if(direcaoGoleiro === "esquerda"){
+            goleiro.style.left = "200px";
+        }
+        if(direcaoGoleiro === "centro"){
+            goleiro.style.left = "260px";
+        }
+        if(direcaoGoleiro === "direita"){
+            goleiro.style.left = "320px";
+        }
+
+    }, 100);
+
+    setTimeout(() => {
+
+        if(direcaoJogador === direcaoGoleiro){
+            resultado.innerHTML = "🧤 DEFENDEU!";
+        } else {
+            resultado.innerHTML = "⚽ GOOOOOL!";
+        }
+
+        bloqueado = false;
+
+    }, 700);
 }
 
 </script>
