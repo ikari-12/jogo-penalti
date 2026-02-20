@@ -11,21 +11,11 @@
             overflow: hidden;
         }
 
-        h1 {
-            color: white;
-            margin-top: 10px;
-        }
+        h1 { color: white; margin-top: 10px; }
 
-        #placar {
-            font-size: 24px;
-            color: yellow;
-        }
+        #placar { font-size: 24px; color: yellow; }
 
-        #meta {
-            color: white;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
+        #meta { color: white; font-size: 18px; margin-bottom: 10px; }
 
         .campo {
             position: relative;
@@ -94,9 +84,7 @@
             transition: all 0.4s ease;
         }
 
-        .botoes {
-            margin-top: 15px;
-        }
+        .botoes { margin-top: 15px; }
 
         button {
             padding: 10px 25px;
@@ -105,9 +93,7 @@
             cursor: pointer;
         }
 
-        button:disabled {
-            opacity: 0.5;
-        }
+        button:disabled { opacity: 0.5; }
 
         #resultado {
             font-size: 26px;
@@ -124,13 +110,8 @@
             color: white;
         }
 
-        #nao {
-            left: 210px;
-        }
-
-        #sim {
-            right: 210px;
-        }
+        #nao { left: 210px; }
+        #sim { right: 210px; }
 
     </style>
 </head>
@@ -181,10 +162,20 @@ function atualizarPlacar(){
 
     if(pontos >= 100 && !modoPergunta){
         modoPergunta = true;
-        document.getElementById("meta").innerHTML = "Você aceita ser nosso parainfo?";
+        document.getElementById("meta").innerHTML = "Você aceita ser nosso paraninfo?";
         document.getElementById("nao").style.display = "block";
         document.getElementById("sim").style.display = "block";
     }
+}
+
+function resetarPosicoes(){
+    const goleiro = document.getElementById("goleiro");
+    const bola = document.getElementById("bola");
+
+    goleiro.style.left = "330px";
+    goleiro.style.transform = "rotate(0deg)";
+    bola.style.left = "340px";
+    bola.style.bottom = "40px";
 }
 
 function chutar(direcaoJogador){
@@ -198,11 +189,7 @@ function chutar(direcaoJogador){
     const resultado = document.getElementById("resultado");
 
     resultado.innerHTML = "";
-
-    goleiro.style.left = "330px";
-    goleiro.style.transform = "rotate(0deg)";
-    bola.style.left = "340px";
-    bola.style.bottom = "40px";
+    resetarPosicoes();
 
     setTimeout(()=>{
 
@@ -215,11 +202,7 @@ function chutar(direcaoJogador){
         let direcaoGoleiro;
 
         if(modoPergunta){
-            if(direcaoJogador === "esquerda"){
-                direcaoGoleiro = "esquerda";
-            } else if(direcaoJogador === "direita"){
-                direcaoGoleiro = "centro";
-            }
+            direcaoGoleiro = (direcaoJogador === "esquerda") ? "esquerda" : "centro";
         } else {
             const opcoes = ['esquerda','centro','direita'];
             direcaoGoleiro = opcoes[Math.floor(Math.random()*3)];
@@ -237,30 +220,34 @@ function chutar(direcaoJogador){
             goleiro.style.transform = "rotate(25deg)";
         }
 
-        setTimeout(()=>{
-
-            if(modoPergunta){
-                if(direcaoJogador === "esquerda"){
-                    resultado.innerHTML = "Não aceitamos NÃO como resposta 😏<br>Responda novamente, você aceita?";
-                } else if(direcaoJogador === "direita"){
-                    resultado.innerHTML = "🎉 Parabéns, você é o melhor!";
-                }
-            } else {
-                if(direcaoJogador === direcaoGoleiro){
-                    resultado.innerHTML = "🧤 DEFENDEU!";
-                } else {
-                    resultado.innerHTML = "⚽ GOOOOOL!";
-                    pontos += 10;
-                    atualizarPlacar();
-                }
-            }
-
-            animando = false;
-            desativarBotoes(false);
-
-        },400);
-
     },100);
+
+    setTimeout(()=>{
+
+        if(modoPergunta){
+            if(direcaoJogador === "esquerda"){
+                resultado.innerHTML = "Não aceitamos NÃO como resposta 😏<br>Responda novamente, você aceita?";
+            } else if(direcaoJogador === "direita"){
+                resultado.innerHTML = "🎉 Parabéns, você é o melhor!";
+            }
+        } else {
+            if(direcaoJogador === direcaoGoleiro){
+                resultado.innerHTML = "🧤 DEFENDEU!";
+            } else {
+                resultado.innerHTML = "⚽ GOOOOOL!";
+                pontos += 10;
+                atualizarPlacar();
+            }
+        }
+
+    },500);
+
+    // 🔥 RESET FINAL GARANTIDO
+    setTimeout(()=>{
+        resetarPosicoes();
+        animando = false;
+        desativarBotoes(false);
+    },1000);
 }
 
 </script>
