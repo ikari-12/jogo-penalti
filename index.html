@@ -135,7 +135,7 @@ button{
 
 <h1>⚽ Pênalti PRO</h1>
 <div id="placar">Gols: 0</div>
-<div id="meta">Faça 10 gols</div>
+<div id="meta">Faça 10 gols para desbloquear a pergunta</div>
 
 <div class="campo">
     <div class="gol"></div>
@@ -234,7 +234,7 @@ function chutar(dir){
         if(modoPergunta){
 
             if(dir==="esquerda"){
-                resultado.innerHTML="Não aceitamos NÃO 😏";
+                resultado.innerHTML="Não aceitamos NÃO como resposta";
             }else{
                 document.getElementById("vencedor").style.display="block";
                 criarConfetes();
