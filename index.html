@@ -35,12 +35,45 @@
             border: 5px solid white;
         }
 
+        /* GOLEIRO HUMANO */
         .goleiro {
             position: absolute;
-            top: 110px;
-            left: 325px;
-            font-size: 60px;
+            top: 120px;
+            left: 330px;
+            width: 40px;
+            height: 120px;
             transition: all 0.4s ease;
+        }
+
+        .cabeca {
+            width: 35px;
+            height: 35px;
+            background: #f1c27d;
+            border-radius: 50%;
+            margin: auto;
+        }
+
+        .corpo {
+            width: 30px;
+            height: 50px;
+            background: blue;
+            margin: auto;
+        }
+
+        .bracos {
+            position: absolute;
+            top: 40px;
+            left: -20px;
+            width: 80px;
+            height: 10px;
+            background: blue;
+        }
+
+        .pernas {
+            width: 30px;
+            height: 40px;
+            background: black;
+            margin: auto;
         }
 
         .bola {
@@ -64,7 +97,6 @@
 
         button:disabled {
             opacity: 0.5;
-            cursor: not-allowed;
         }
 
         #resultado {
@@ -73,6 +105,7 @@
             margin-top: 10px;
             height: 40px;
         }
+
     </style>
 </head>
 <body>
@@ -81,7 +114,14 @@
 
 <div class="campo">
     <div class="gol"></div>
-    <div class="goleiro" id="goleiro">🧤</div>
+
+    <div class="goleiro" id="goleiro">
+        <div class="cabeca"></div>
+        <div class="corpo"></div>
+        <div class="bracos"></div>
+        <div class="pernas"></div>
+    </div>
+
     <div class="bola" id="bola">⚽</div>
 </div>
 
@@ -98,9 +138,9 @@
 let animando = false;
 
 function desativarBotoes(valor){
-    document.getElementById("btn1").disabled = valor;
-    document.getElementById("btn2").disabled = valor;
-    document.getElementById("btn3").disabled = valor;
+    btn1.disabled = valor;
+    btn2.disabled = valor;
+    btn3.disabled = valor;
 }
 
 function chutar(direcaoJogador){
@@ -118,24 +158,30 @@ function chutar(direcaoJogador){
 
     resultado.innerHTML = "";
 
-    // POSIÇÕES INICIAIS
-    goleiro.style.left = "325px";
+    goleiro.style.left = "330px";
+    goleiro.style.transform = "rotate(0deg)";
     bola.style.left = "340px";
     bola.style.bottom = "40px";
 
     setTimeout(()=>{
 
-        // MOVIMENTO BOLA
         if(direcaoJogador === "esquerda") bola.style.left = "250px";
         if(direcaoJogador === "centro") bola.style.left = "340px";
         if(direcaoJogador === "direita") bola.style.left = "430px";
 
         bola.style.bottom = "260px";
 
-        // MOVIMENTO GOLEIRO
-        if(direcaoGoleiro === "esquerda") goleiro.style.left = "250px";
-        if(direcaoGoleiro === "centro") goleiro.style.left = "325px";
-        if(direcaoGoleiro === "direita") goleiro.style.left = "400px";
+        if(direcaoGoleiro === "esquerda"){
+            goleiro.style.left = "250px";
+            goleiro.style.transform = "rotate(-25deg)";
+        }
+        if(direcaoGoleiro === "centro"){
+            goleiro.style.left = "330px";
+        }
+        if(direcaoGoleiro === "direita"){
+            goleiro.style.left = "410px";
+            goleiro.style.transform = "rotate(25deg)";
+        }
 
     },100);
 
@@ -151,8 +197,8 @@ function chutar(direcaoJogador){
 
     setTimeout(()=>{
 
-        // RESET
-        goleiro.style.left = "325px";
+        goleiro.style.left = "330px";
+        goleiro.style.transform = "rotate(0deg)";
         bola.style.left = "340px";
         bola.style.bottom = "40px";
 
