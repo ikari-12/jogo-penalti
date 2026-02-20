@@ -7,7 +7,7 @@
 body{
     margin:0;
     overflow:hidden;
-    font-family:Arial;
+    font-family:Arial, sans-serif;
     text-align:center;
     background:linear-gradient(#87ceeb,#2e8b57);
 }
@@ -15,11 +15,12 @@ body{
 canvas{
     display:block;
     margin:auto;
+    background:transparent;
 }
 
 #placar{
     position:absolute;
-    top:10px;
+    top:15px;
     left:50%;
     transform:translateX(-50%);
     font-size:22px;
@@ -30,28 +31,36 @@ canvas{
     position:absolute;
     top:-200px;
     width:100%;
-    font-size:40px;
+    font-size:36px;
     font-weight:bold;
     transition:1s;
     display:none;
 }
 
-.botaoPergunta{
+.botao{
     position:absolute;
     bottom:100px;
     width:120px;
     height:60px;
     font-size:22px;
     font-weight:bold;
-    display:none;
     border:none;
     border-radius:10px;
+    display:none;
 }
 
-#sim{ right:20px; background:lime; }
-#nao{ left:20px; background:red; color:white; }
+#sim{
+    right:20px;
+    background:lime;
+}
 
-#mensagemFinal{
+#nao{
+    left:20px;
+    background:red;
+    color:white;
+}
+
+#final{
     position:absolute;
     top:50%;
     left:50%;
@@ -67,10 +76,10 @@ canvas{
     position:absolute;
     width:8px;
     height:8px;
-    animation:cair linear infinite;
+    animation:fall linear infinite;
 }
 
-@keyframes cair{
+@keyframes fall{
     from{ transform:translateY(-10px); }
     to{ transform:translateY(100vh); }
 }
@@ -80,10 +89,9 @@ canvas{
 
 <div id="placar">Gols: 0/10</div>
 <div id="pergunta">Você aceita ser nosso paraninfo?</div>
-<button id="sim" class="botaoPergunta">SIM</button>
-<button id="nao" class="botaoPergunta">NÃO</button>
-
-<div id="mensagemFinal"></div>
+<button id="sim" class="botao">SIM</button>
+<button id="nao" class="botao">NÃO</button>
+<div id="final"></div>
 
 <canvas id="game" width="400" height="600"></canvas>
 
@@ -91,24 +99,27 @@ canvas{
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-let bolaX=200;
-let bolaY=500;
-let gols=0;
-let fasePergunta=false;
+let bolaX = 200;
+let bolaY = 500;
+let gols = 0;
+let perguntaAtiva = false;
 
 function desenhar(){
     ctx.clearRect(0,0,400,600);
 
+    // Traves (sem trave inferior)
     ctx.strokeStyle="white";
     ctx.lineWidth=6;
     ctx.beginPath();
-    ctx.moveTo(100,100);
-    ctx.lineTo(300,100);
-    ctx.lineTo(300,200);
-    ctx.moveTo(100,100);
-    ctx.lineTo(100,200);
+    ctx.moveTo(100,120);
+    ctx.lineTo(300,120);
+    ctx.moveTo(100,120);
+    ctx.lineTo(100,220);
+    ctx.moveTo(300,120);
+    ctx.lineTo(300,220);
     ctx.stroke();
 
+    // Bola
     ctx.beginPath();
     ctx.fillStyle="white";
     ctx.arc(bolaX,bolaY,15,0,Math.PI*2);
@@ -117,66 +128,68 @@ function desenhar(){
 
 desenhar();
 
-canvas.addEventListener("click",chutar);
-canvas.addEventListener("touchstart",chutar);
+canvas.addEventListener("click", chutar);
+canvas.addEventListener("touchstart", chutar);
 
 function chutar(e){
-    if(fasePergunta) return;
+    if(perguntaAtiva) return;
 
-    let alvoX = e.touches ? e.touches[0].clientX : e.clientX;
     let rect = canvas.getBoundingClientRect();
-    alvoX -= rect.left;
+    let x = e.touches ? e.touches[0].clientX : e.clientX;
+    x -= rect.left;
 
-    bolaY=120;
-    bolaX=alvoX;
+    bolaX = x;
+    bolaY = 150;
+    desenhar();
 
     setTimeout(()=>{
         gols++;
         document.getElementById("placar").innerText="Gols: "+gols+"/10";
         resetar();
-        if(gols==10){
+
+        if(gols === 10){
             ativarPergunta();
         }
-    },500);
 
-    desenhar();
+    },400);
 }
 
 function resetar(){
-    bolaX=200;
-    bolaY=500;
+    bolaX = 200;
+    bolaY = 500;
     desenhar();
 }
 
 function ativarPergunta(){
-    fasePergunta=true;
+    perguntaAtiva = true;
 
-    const pergunta=document.getElementById("pergunta");
+    const pergunta = document.getElementById("pergunta");
     pergunta.style.display="block";
     pergunta.style.top="40%";
 
     setTimeout(()=>{
-        pergunta.style.top="10px";
+        pergunta.style.top="20px";
         document.getElementById("sim").style.display="block";
         document.getElementById("nao").style.display="block";
     },1000);
 }
 
-document.getElementById("nao").onclick=function(){
+document.getElementById("nao").onclick = function(){
     alert("Não aceitamos não como resposta! Responda novamente.");
 };
 
-document.getElementById("sim").onclick=function(){
-    // SUMIR COM TUDO
+document.getElementById("sim").onclick = function(){
+
+    // esconder tudo
     canvas.style.display="none";
     document.getElementById("placar").style.display="none";
     document.getElementById("pergunta").style.display="none";
     document.getElementById("sim").style.display="none";
     document.getElementById("nao").style.display="none";
 
-    // MOSTRAR MENSAGEM FINAL
-    const msg=document.getElementById("mensagemFinal");
-    msg.innerText=
+    // mostrar mensagem final
+    const final = document.getElementById("final");
+    final.innerText =
 `É uma honra termos o senhor como nosso paraninfo!!
 
 A contagem regressiva para o grande dia começa agora!
@@ -185,21 +198,20 @@ Te esperamos dia 25/05/2026 às 19h
 no Instituto Federal Fluminense
 Campus Campos Guarus!`;
 
-    msg.style.display="block";
+    final.style.display="block";
 
-    criarConfete();
+    iniciarConfete();
 };
 
-function criarConfete(){
+function iniciarConfete(){
     setInterval(()=>{
-        let confete=document.createElement("div");
-        confete.classList.add("confete");
-        confete.style.left=Math.random()*100+"vw";
-        confete.style.background=
-        "hsl("+Math.random()*360+",100%,50%)";
-        confete.style.animationDuration=(Math.random()*3+2)+"s";
-        document.body.appendChild(confete);
-    },80);
+        const c = document.createElement("div");
+        c.classList.add("confete");
+        c.style.left = Math.random()*100 + "vw";
+        c.style.background = "hsl(" + Math.random()*360 + ",100%,50%)";
+        c.style.animationDuration = (Math.random()*3+2)+"s";
+        document.body.appendChild(c);
+    },100);
 }
 </script>
 
