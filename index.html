@@ -1,178 +1,154 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Jogo de Pênalti PRO</title>
-    <style>
-        body {
-            margin: 0;
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to top, #2ecc71 70%, #87ceeb 30%);
-            overflow: hidden;
-        }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo de Pênalti PRO Mobile</title>
 
-        h1 { color: white; margin-top: 10px; }
+<style>
+body{
+    margin:0;
+    text-align:center;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(to top,#2ecc71 70%,#87ceeb 30%);
+    overflow:hidden;
+}
 
-        #placar { font-size: 24px; color: yellow; }
+h1{
+    color:white;
+    font-size:6vw;
+}
 
-        #meta {
-            color: white;
-            font-size: 50px;
-            margin-top: 20px;
-        }
+#placar{
+    font-size:5vw;
+    color:yellow;
+}
 
-        .campo {
-            position: relative;
-            width: 700px;
-            height: 450px;
-            margin: 20px auto;
-            background: #27ae60;
-            border: 4px solid white;
-            border-bottom: none;
-        }
+#meta{
+    color:white;
+    font-size:7vw;
+    margin-top:10px;
+}
 
-        .gol {
-            position: absolute;
-            top: 40px;
-            left: 200px;
-            width: 300px;
-            height: 150px;
-            border-left: 5px solid white;
-            border-right: 5px solid white;
-            border-top: 5px solid white;
-        }
+.campo{
+    position:relative;
+    width:95vw;
+    height:60vh;
+    margin:auto;
+    background:#27ae60;
+    border:3px solid white;
+    border-bottom:none;
+}
 
-        .goleiro {
-            position: absolute;
-            top: 120px;
-            left: 330px;
-            width: 40px;
-            height: 120px;
-            transition: all 0.4s ease;
-        }
+.gol{
+    position:absolute;
+    top:5vh;
+    left:20%;
+    width:60%;
+    height:20vh;
+    border-left:4px solid white;
+    border-right:4px solid white;
+    border-top:4px solid white;
+}
 
-        .cabeca {
-            width: 35px;
-            height: 35px;
-            background: #f1c27d;
-            border-radius: 50%;
-            margin: auto;
-        }
+.goleiro{
+    position:absolute;
+    top:18vh;
+    left:45%;
+    width:8vw;
+    height:18vh;
+    transition:0.4s;
+}
 
-        .corpo {
-            width: 30px;
-            height: 50px;
-            background: blue;
-            margin: auto;
-        }
+.cabeca{
+    width:8vw;
+    height:8vw;
+    background:#f1c27d;
+    border-radius:50%;
+}
 
-        .bracos {
-            position: absolute;
-            top: 40px;
-            left: -20px;
-            width: 80px;
-            height: 10px;
-            background: blue;
-        }
+.corpo{
+    width:6vw;
+    height:8vh;
+    background:blue;
+    margin:auto;
+}
 
-        .pernas {
-            width: 30px;
-            height: 40px;
-            background: black;
-            margin: auto;
-        }
+.bola{
+    position:absolute;
+    bottom:5vh;
+    left:47%;
+    font-size:10vw;
+    transition:0.4s;
+}
 
-        .bola {
-            position: absolute;
-            bottom: 40px;
-            left: 340px;
-            font-size: 45px;
-            transition: all 0.4s ease;
-        }
+.botoes{
+    margin-top:10px;
+}
 
-        .botoes { margin-top: 15px; }
+button{
+    width:28vw;
+    padding:15px;
+    font-size:5vw;
+    margin:5px;
+    border:none;
+    border-radius:10px;
+}
 
-        button {
-            padding: 10px 25px;
-            font-size: 18px;
-            margin: 5px;
-            cursor: pointer;
-        }
+#resultado{
+    font-size:6vw;
+    color:white;
+    min-height:40px;
+}
 
-        button:disabled { opacity: 0.5; }
+#vencedor{
+    position:fixed;
+    top:40%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    font-size:10vw;
+    font-weight:bold;
+    color:gold;
+    display:none;
+    z-index:10;
+}
 
-        #resultado {
-            font-size: 26px;
-            color: white;
-            margin-top: 10px;
-            min-height: 40px;
-        }
+.confete{
+    position:fixed;
+    width:8px;
+    height:8px;
+    top:-10px;
+    animation:cair linear infinite;
+}
 
-        .opcao {
-            position: absolute;
-            top: 80px;
-            font-size: 26px;
-            font-weight: bold;
-            color: white;
-        }
-
-        #nao { left: 210px; }
-        #sim { right: 210px; }
-
-        #vencedor {
-            position: fixed;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 70px;
-            font-weight: bold;
-            color: gold;
-            display: none;
-            z-index: 10;
-        }
-
-        .confete {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            top: -10px;
-            animation: cair linear infinite;
-        }
-
-        @keyframes cair {
-            to {
-                transform: translateY(110vh) rotate(360deg);
-            }
-        }
-
-    </style>
+@keyframes cair{
+    to{
+        transform:translateY(110vh) rotate(360deg);
+    }
+}
+</style>
 </head>
+
 <body>
 
-<h1>⚽ Jogo de Pênalti PRO</h1>
+<h1>⚽ Pênalti PRO</h1>
 <div id="placar">Gols: 0</div>
-<div id="meta">Faça 10 gols para desbloquear a pergunta</div>
+<div id="meta">Faça 10 gols</div>
 
 <div class="campo">
     <div class="gol"></div>
 
-    <div class="opcao" id="nao" style="display:none;">NÃO</div>
-    <div class="opcao" id="sim" style="display:none;">SIM</div>
-
     <div class="goleiro" id="goleiro">
         <div class="cabeca"></div>
         <div class="corpo"></div>
-        <div class="bracos"></div>
-        <div class="pernas"></div>
     </div>
 
     <div class="bola" id="bola">⚽</div>
 </div>
 
 <div class="botoes">
-    <button onclick="chutar('esquerda')" id="btn1">Esquerda</button>
-    <button onclick="chutar('centro')" id="btn2">Centro</button>
-    <button onclick="chutar('direita')" id="btn3">Direita</button>
+    <button onclick="chutar('esquerda')">Esquerda</button>
+    <button onclick="chutar('centro')">Centro</button>
+    <button onclick="chutar('direita')">Direita</button>
 </div>
 
 <div id="resultado"></div>
@@ -180,103 +156,91 @@
 
 <script>
 
-let animando = false;
-let gols = 0;
-let modoPergunta = false;
+let gols=0;
+let modoPergunta=false;
+let animando=false;
 
-const goleiro = document.getElementById("goleiro");
-const bola = document.getElementById("bola");
-const resultado = document.getElementById("resultado");
-const meta = document.getElementById("meta");
+const goleiro=document.getElementById("goleiro");
+const bola=document.getElementById("bola");
+const meta=document.getElementById("meta");
+const resultado=document.getElementById("resultado");
 
-function criarConfetesInfinitos(){
+function criarConfetes(){
     setInterval(()=>{
-        const conf = document.createElement("div");
+        const conf=document.createElement("div");
         conf.classList.add("confete");
-        conf.style.left = Math.random() * 100 + "vw";
-        conf.style.backgroundColor = "hsl(" + Math.random()*360 + ",100%,50%)";
-        conf.style.animationDuration = (Math.random()*3+2)+"s";
+        conf.style.left=Math.random()*100+"vw";
+        conf.style.backgroundColor="hsl("+Math.random()*360+",100%,50%)";
+        conf.style.animationDuration=(Math.random()*3+2)+"s";
         document.body.appendChild(conf);
     },150);
 }
 
-function atualizarPlacar(){
-    document.getElementById("placar").innerHTML = "Gols: " + gols;
+function resetar(){
+    goleiro.style.left="45%";
+    bola.style.left="47%";
+    bola.style.bottom="5vh";
+}
 
-    if(gols >= 10 && !modoPergunta){
-        modoPergunta = true;
+function atualizar(){
+    document.getElementById("placar").innerHTML="Gols: "+gols;
 
-        meta.innerHTML = "VOCÊ ACEITA SER NOSSO PARANINFO?";
-        meta.style.fontSize = "60px";
-
-        document.getElementById("nao").style.display = "block";
-        document.getElementById("sim").style.display = "block";
+    if(gols>=10 && !modoPergunta){
+        modoPergunta=true;
+        meta.innerHTML="VOCÊ ACEITA SER NOSSO PARANINFO?";
     }
 }
 
-function resetar(){
-    goleiro.style.left = "330px";
-    goleiro.style.transform = "rotate(0deg)";
-    bola.style.left = "340px";
-    bola.style.bottom = "40px";
-}
-
-function chutar(direcaoJogador){
+function chutar(dir){
 
     if(animando) return;
-    animando = true;
-    resultado.innerHTML = "";
+    animando=true;
+    resultado.innerHTML="";
 
-    let direcaoGoleiro;
+    let defesa;
 
     if(modoPergunta){
-        direcaoGoleiro = (direcaoJogador === "esquerda") ? "esquerda" : "centro";
-    } else {
-        const opcoes = ['esquerda','centro','direita'];
-        direcaoGoleiro = opcoes[Math.floor(Math.random()*3)];
+        defesa=(dir==="esquerda")?"esquerda":"centro";
+    }else{
+        const op=["esquerda","centro","direita"];
+        defesa=op[Math.floor(Math.random()*3)];
     }
 
-    if(direcaoJogador === "esquerda") bola.style.left = "250px";
-    if(direcaoJogador === "centro") bola.style.left = "340px";
-    if(direcaoJogador === "direita") bola.style.left = "430px";
+    if(dir==="esquerda") bola.style.left="30%";
+    if(dir==="centro") bola.style.left="47%";
+    if(dir==="direita") bola.style.left="65%";
 
-    bola.style.bottom = "260px";
+    bola.style.bottom="35vh";
 
-    if(direcaoGoleiro === "esquerda"){
-        goleiro.style.left = "250px";
-        goleiro.style.transform = "rotate(-25deg)";
-    }
-    if(direcaoGoleiro === "direita"){
-        goleiro.style.left = "410px";
-        goleiro.style.transform = "rotate(25deg)";
-    }
+    if(defesa==="esquerda") goleiro.style.left="30%";
+    if(defesa==="direita") goleiro.style.left="65%";
 
     setTimeout(()=>{
 
         if(modoPergunta){
 
-            if(direcaoJogador === "esquerda"){
-                resultado.innerHTML = "Não aceitamos NÃO 😏<br>Responda novamente!";
-            } else {
-                document.getElementById("vencedor").style.display = "block";
-                criarConfetesInfinitos();
+            if(dir==="esquerda"){
+                resultado.innerHTML="Não aceitamos NÃO como resposta  😏";
+            }else{
+                document.getElementById("vencedor").style.display="block";
+                criarConfetes();
             }
 
-        } else {
+        }else{
 
-            if(direcaoJogador !== direcaoGoleiro){
+            if(dir!==defesa){
                 gols++;
-                atualizarPlacar();
-                resultado.innerHTML = "⚽ GOOOOOL!";
-            } else {
-                resultado.innerHTML = "🧤 DEFENDEU!";
+                resultado.innerHTML="⚽ GOOOL!";
+                atualizar();
+            }else{
+                resultado.innerHTML="🧤 DEFENDEU!";
             }
 
         }
 
         setTimeout(()=>{
             resetar();
-            animando = false;
+            animando=false;
         },500);
 
     },400);
