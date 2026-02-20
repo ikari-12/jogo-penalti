@@ -2,163 +2,155 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Jogo de Pênalti 2D</title>
+<title>Jogo de Pênalti</title>
 
 <style>
-
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:#2ecc71;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
+body {
+    margin: 0;
+    background: #0b6623;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
 }
 
-/* CAMPO */
-.campo{
-    position:relative;
-    width:90%;
-    max-width:800px;
-    height:450px;
-    background:#27ae60;
-    border:5px solid white;
-    margin-top:20px;
-    overflow:hidden;
+#campo {
+    position: relative;
+    width: 800px;
+    height: 500px;
+    background: linear-gradient(#1e7f34, #146622);
+    border: 4px solid white;
+    overflow: hidden;
 }
 
-/* GOL */
-.gol{
-    position:absolute;
-    top:20px;
-    left:50%;
-    transform:translateX(-50%);
-    width:40%;
-    height:100px;
-    border:5px solid white;
+/* Gol */
+#gol {
+    position: absolute;
+    top: 30px;
+    left: 200px;
+    width: 400px;
+    height: 150px;
+    border: 6px solid white;
+    box-sizing: border-box;
 }
 
-/* GOLEIRO */
-.goleiro{
-    position:absolute;
-    top:70px;
-    left:50%;
-    transform:translateX(-50%);
-    width:40px;
-    height:80px;
-    background:blue;
-    transition:0.4s ease;
+/* Rede */
+#rede {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.4) 0px,
+        rgba(255,255,255,0.4) 2px,
+        transparent 2px,
+        transparent 20px
+    ),
+    repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.4) 0px,
+        rgba(255,255,255,0.4) 2px,
+        transparent 2px,
+        transparent 20px
+    );
 }
 
-/* BOLA */
-.bola{
-    position:absolute;
-    bottom:30px;
-    left:50%;
-    transform:translateX(-50%);
-    font-size:40px;
-    transition:0.4s ease;
+/* Goleiro */
+#goleiro {
+    position: absolute;
+    top: 90px;
+    left: 370px;
+    width: 60px;
+    height: 80px;
+    background: blue;
+    border-radius: 10px;
+    transition: left 0.4s ease;
 }
 
-button{
-    margin:10px;
-    padding:10px 20px;
-    font-size:18px;
-    cursor:pointer;
+/* Bola */
+#bola {
+    position: absolute;
+    bottom: 40px;
+    left: 380px;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    border: 3px solid black;
+    transition: all 0.5s ease;
 }
 
-#resultado{
-    font-size:26px;
-    color:white;
-    margin-top:10px;
-    height:40px;
+#mensagem {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
 }
-
 </style>
 </head>
+
 <body>
 
-<h1>⚽ Jogo de Pênalti 2D</h1>
+<div id="campo">
+    <div id="gol">
+        <div id="rede"></div>
+    </div>
 
-<div class="campo">
-
-    <div class="gol"></div>
-
-    <div class="goleiro" id="goleiro"></div>
-
-    <div class="bola" id="bola">⚽</div>
-
+    <div id="goleiro"></div>
+    <div id="bola"></div>
+    <div id="mensagem"></div>
 </div>
-
-<div>
-    <button onclick="chutar('esquerda')">Esquerda</button>
-    <button onclick="chutar('centro')">Centro</button>
-    <button onclick="chutar('direita')">Direita</button>
-</div>
-
-<div id="resultado"></div>
 
 <script>
+const bola = document.getElementById("bola");
+const goleiro = document.getElementById("goleiro");
+const mensagem = document.getElementById("mensagem");
 
-let animando = false;
+let podeChutar = true;
 
-function chutar(direcao){
-
-    if(animando) return;
-    animando = true;
-
-    const goleiro = document.getElementById("goleiro");
-    const bola = document.getElementById("bola");
-    const resultado = document.getElementById("resultado");
-
-    const opcoes = ["esquerda","centro","direita"];
-    const defesa = opcoes[Math.floor(Math.random()*3)];
-
-    resultado.innerHTML = "";
-
-    // RESET INICIAL
-    goleiro.style.left = "50%";
-    bola.style.left = "50%";
-    bola.style.bottom = "30px";
-
-    setTimeout(()=>{
-
-        // MOVIMENTO DA BOLA
-        if(direcao === "esquerda") bola.style.left = "30%";
-        if(direcao === "direita") bola.style.left = "70%";
-
-        bola.style.bottom = "300px";
-
-        // MOVIMENTO DO GOLEIRO
-        if(defesa === "esquerda") goleiro.style.left = "30%";
-        if(defesa === "direita") goleiro.style.left = "70%";
-
-    },100);
-
-    setTimeout(()=>{
-
-        if(direcao === defesa){
-            resultado.innerHTML = "🧤 DEFENDEU!";
-        }else{
-            resultado.innerHTML = "⚽ GOOOOOL!";
-        }
-
-    },600);
-
-    // RESET FINAL
-    setTimeout(()=>{
-
-        goleiro.style.left = "50%";
-        bola.style.left = "50%";
-        bola.style.bottom = "30px";
-        resultado.innerHTML = "";
-
-        animando = false;
-
-    },1500);
-
+function moverGoleiro() {
+    const posicoes = [250, 370, 490];
+    const escolha = posicoes[Math.floor(Math.random() * 3)];
+    goleiro.style.left = escolha + "px";
+    return escolha;
 }
 
+function chutar() {
+    if (!podeChutar) return;
+    podeChutar = false;
+
+    mensagem.textContent = "";
+
+    const direcoes = [250, 370, 490];
+    const chute = direcoes[Math.floor(Math.random() * 3)];
+
+    const defesa = moverGoleiro();
+
+    // Anima bola
+    bola.style.bottom = "300px";
+    bola.style.left = chute + "px";
+
+    setTimeout(() => {
+        if (chute === defesa) {
+            mensagem.textContent = "DEFENDEU!";
+        } else {
+            mensagem.textContent = "GOOOL!";
+        }
+
+        // Reset bola
+        bola.style.bottom = "40px";
+        bola.style.left = "380px";
+
+        podeChutar = true;
+
+    }, 800);
+}
+
+document.addEventListener("click", chutar);
 </script>
 
 </body>
