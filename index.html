@@ -100,50 +100,62 @@ button{
 
 <script>
 
-let animando=false;
+let animando = false;
 
 function chutar(direcao){
 
     if(animando) return;
-    animando=true;
+    animando = true;
 
-    const goleiro=document.getElementById("goleiro");
-    const bola=document.getElementById("bola");
-    const resultado=document.getElementById("resultado");
+    const goleiro = document.getElementById("goleiro");
+    const bola = document.getElementById("bola");
+    const resultado = document.getElementById("resultado");
 
-    const opcoes=["esquerda","centro","direita"];
-    const defesa=opcoes[Math.floor(Math.random()*3)];
+    const opcoes = ["esquerda","centro","direita"];
+    const defesa = opcoes[Math.floor(Math.random()*3)];
 
-    resultado.innerHTML="";
+    resultado.innerHTML = "";
 
-    // RESET
-    goleiro.style.left="50%";
-    bola.style.left="50%";
-    bola.style.bottom="30px";
+    // RESET INICIAL
+    goleiro.style.left = "50%";
+    bola.style.left = "50%";
+    bola.style.bottom = "30px";
 
     setTimeout(()=>{
 
-        if(direcao==="esquerda") bola.style.left="30%";
-        if(direcao==="direita") bola.style.left="70%";
+        // MOVIMENTO DA BOLA
+        if(direcao === "esquerda") bola.style.left = "30%";
+        if(direcao === "direita") bola.style.left = "70%";
 
-        bola.style.bottom="300px";
+        bola.style.bottom = "300px";
 
-        if(defesa==="esquerda") goleiro.style.left="30%";
-        if(defesa==="direita") goleiro.style.left="70%";
+        // MOVIMENTO DO GOLEIRO
+        if(defesa === "esquerda") goleiro.style.left = "30%";
+        if(defesa === "direita") goleiro.style.left = "70%";
 
     },100);
 
     setTimeout(()=>{
 
-        if(direcao===defesa){
-            resultado.innerHTML="🧤 DEFENDEU!";
+        if(direcao === defesa){
+            resultado.innerHTML = "🧤 DEFENDEU!";
         }else{
-            resultado.innerHTML="⚽ GOOOOOL!";
+            resultado.innerHTML = "⚽ GOOOOOL!";
         }
 
-        animando=false;
-
     },600);
+
+    // RESET FINAL
+    setTimeout(()=>{
+
+        goleiro.style.left = "50%";
+        bola.style.left = "50%";
+        bola.style.bottom = "30px";
+        resultado.innerHTML = "";
+
+        animando = false;
+
+    },1500);
 
 }
 
