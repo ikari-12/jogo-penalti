@@ -1,191 +1,265 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Jogo de Pênalti Especial</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pênalti PRO Mobile</title>
+
 <style>
 body{
     margin:0;
-    background:linear-gradient(#87ceeb,#2e8b57);
-    overflow:hidden;
-    font-family:Arial;
     text-align:center;
-    touch-action: manipulation;
+    font-family:Arial;
+    background:linear-gradient(to top,#2ecc71 70%,#87ceeb 30%);
+    overflow:hidden;
 }
 
-canvas{
-    display:block;
+h1{color:white;font-size:6vw;}
+
+#placar{font-size:5vw;color:yellow;}
+
+#meta{
+    color:white;
+    font-size:7vw;
+    margin-top:10px;
+}
+
+.campo{
+    position:relative;
+    width:95vw;
+    height:60vh;
     margin:auto;
-    background:transparent;
+    background:#27ae60;
+    border:3px solid white;
+    border-bottom:none;
 }
 
-#placar{
+.gol{
     position:absolute;
-    top:10px;
-    left:50%;
-    transform:translateX(-50%);
-    font-size:24px;
-    font-weight:bold;
+    top:5vh;
+    left:20%;
+    width:60%;
+    height:20vh;
+    border-left:4px solid white;
+    border-right:4px solid white;
+    border-top:4px solid white;
 }
 
-#mensagem{
+.opcao{
     position:absolute;
-    top:40%;
-    width:100%;
-    font-size:40px;
+    top:10vh;
+    font-size:7vw;
     font-weight:bold;
+    color:white;
     display:none;
+    z-index:5;
 }
 
-#pergunta{
+#nao{ left:25%; }
+#sim{ right:25%; }
+
+.goleiro{
     position:absolute;
-    top:-200px;
-    width:100%;
-    font-size:38px;
-    font-weight:bold;
-    transition:1s;
-    display:none;
+    top:18vh;
+    left:45%;
+    width:8vw;
+    height:18vh;
+    transition:0.4s;
 }
 
-.botaoPergunta{
+.cabeca{
+    width:8vw;
+    height:8vw;
+    background:#f1c27d;
+    border-radius:50%;
+}
+
+.corpo{
+    width:6vw;
+    height:8vh;
+    background:blue;
+    margin:auto;
+}
+
+.bola{
     position:absolute;
-    bottom:100px;
-    width:120px;
-    height:60px;
-    font-size:22px;
-    font-weight:bold;
-    display:none;
+    bottom:5vh;
+    left:47%;
+    font-size:10vw;
+    transition:0.4s;
+}
+
+button{
+    width:28vw;
+    padding:15px;
+    font-size:5vw;
+    margin:5px;
     border:none;
     border-radius:10px;
 }
 
-#sim{ right:20px; background:lime; }
-#nao{ left:20px; background:red; color:white; }
+#resultado{
+    font-size:6vw;
+    color:white;
+    min-height:40px;
+}
+
+#vencedor{
+    position:fixed;
+    top:40%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    font-size:10vw;
+    font-weight:bold;
+    color:gold;
+    display:none;
+    z-index:10;
+}
 
 .confete{
-    position:absolute;
+    position:fixed;
     width:8px;
     height:8px;
+    top:-10px;
     animation:cair linear infinite;
 }
 
 @keyframes cair{
-    from{ transform:translateY(-10px); }
-    to{ transform:translateY(100vh); }
+    to{
+        transform:translateY(110vh) rotate(360deg);
+    }
 }
 </style>
 </head>
+
 <body>
 
-<div id="placar">Gols: 0/10</div>
-<div id="mensagem"></div>
-<div id="pergunta">Você aceita ser nosso paraninfo?</div>
-<button id="sim" class="botaoPergunta">SIM</button>
-<button id="nao" class="botaoPergunta">NÃO</button>
+<h1>⚽ Pênalti PRO</h1>
+<div id="placar">Gols: 0</div>
+<div id="meta">Faça 10 gols</div>
 
-<canvas id="game" width="400" height="600"></canvas>
+<div class="campo">
+    <div class="gol"></div>
+
+    <!-- AGORA FICAM DENTRO DO CAMPO -->
+    <div class="opcao" id="nao">NÃO</div>
+    <div class="opcao" id="sim">SIM</div>
+
+    <div class="goleiro" id="goleiro">
+        <div class="cabeca"></div>
+        <div class="corpo"></div>
+    </div>
+
+    <div class="bola" id="bola">⚽</div>
+</div>
+
+<div>
+    <button onclick="chutar('esquerda')">Esquerda</button>
+    <button onclick="chutar('centro')">Centro</button>
+    <button onclick="chutar('direita')">Direita</button>
+</div>
+
+<div id="resultado"></div>
+<div id="vencedor">VOCÊ É O MELHOR!</div>
 
 <script>
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
 
-let bolaX = 200;
-let bolaY = 500;
-let gols = 0;
-let fasePergunta = false;
+let gols=0;
+let modoPergunta=false;
+let animando=false;
 
-function desenharCampo(){
-    ctx.clearRect(0,0,400,600);
+const goleiro=document.getElementById("goleiro");
+const bola=document.getElementById("bola");
+const meta=document.getElementById("meta");
+const resultado=document.getElementById("resultado");
+const nao=document.getElementById("nao");
+const sim=document.getElementById("sim");
 
-    // Traves
-    ctx.strokeStyle="white";
-    ctx.lineWidth=6;
-    ctx.beginPath();
-    ctx.moveTo(100,100);
-    ctx.lineTo(300,100);
-    ctx.lineTo(300,200);
-    ctx.moveTo(100,100);
-    ctx.lineTo(100,200);
-    ctx.stroke();
-
-    // Bola
-    ctx.beginPath();
-    ctx.fillStyle="white";
-    ctx.arc(bolaX,bolaY,15,0,Math.PI*2);
-    ctx.fill();
-}
-
-desenharCampo();
-
-canvas.addEventListener("click",chutar);
-canvas.addEventListener("touchstart",chutar);
-
-function chutar(e){
-    if(fasePergunta) return;
-
-    let alvoX = e.touches ? e.touches[0].clientX : e.clientX;
-    let rect = canvas.getBoundingClientRect();
-    alvoX -= rect.left;
-
-    bolaY = 120;
-    bolaX = alvoX;
-
-    setTimeout(()=>{
-        gols++;
-        document.getElementById("placar").innerText="Gols: "+gols+"/10";
-        resetarBola();
-        if(gols==10){
-            ativarPergunta();
-        }
-    },500);
-
-    desenharCampo();
-}
-
-function resetarBola(){
-    bolaX=200;
-    bolaY=500;
-    desenharCampo();
-}
-
-function ativarPergunta(){
-    fasePergunta=true;
-
-    const pergunta=document.getElementById("pergunta");
-    pergunta.style.display="block";
-    pergunta.style.top="40%";
-
-    setTimeout(()=>{
-        pergunta.style.top="10px";
-        document.getElementById("sim").style.display="block";
-        document.getElementById("nao").style.display="block";
-    },1000);
-}
-
-document.getElementById("nao").onclick=function(){
-    document.getElementById("mensagem").innerText=
-    "Não aceitamos não como resposta! Responda novamente, você aceita?";
-    document.getElementById("mensagem").style.display="block";
-};
-
-document.getElementById("sim").onclick=function(){
-    document.getElementById("mensagem").innerText=
-    "É uma honra termos o senhor como nosso paraninfo!!\n\nA contagem regressiva para o grande dia começa agora!\n\nTe esperamos dia 25/05/2026 às 19h no Instituto Federal Fluminense Campus Campos Guarus!";
-    document.getElementById("mensagem").style.display="block";
-    criarConfete();
-};
-
-function criarConfete(){
+function criarConfetes(){
     setInterval(()=>{
-        let confete=document.createElement("div");
-        confete.classList.add("confete");
-        confete.style.left=Math.random()*100+"vw";
-        confete.style.background=
-        "hsl("+Math.random()*360+",100%,50%)";
-        confete.style.animationDuration=(Math.random()*3+2)+"s";
-        document.body.appendChild(confete);
-    },100);
+        const conf=document.createElement("div");
+        conf.classList.add("confete");
+        conf.style.left=Math.random()*100+"vw";
+        conf.style.backgroundColor="hsl("+Math.random()*360+",100%,50%)";
+        conf.style.animationDuration=(Math.random()*3+2)+"s";
+        document.body.appendChild(conf);
+    },150);
 }
+
+function resetar(){
+    goleiro.style.left="45%";
+    bola.style.left="47%";
+    bola.style.bottom="5vh";
+}
+
+function atualizar(){
+    document.getElementById("placar").innerHTML="Gols: "+gols;
+
+    if(gols>=10 && !modoPergunta){
+        modoPergunta=true;
+        meta.innerHTML="VOCÊ ACEITA SER NOSSO PARANINFO?";
+        meta.style.fontSize="9vw";
+
+        // FORÇA APARECER
+        nao.style.display="block";
+        sim.style.display="block";
+    }
+}
+
+function chutar(dir){
+
+    if(animando) return;
+    animando=true;
+    resultado.innerHTML="";
+
+    let defesa;
+
+    if(modoPergunta){
+        defesa=(dir==="esquerda")?"esquerda":"centro";
+    }else{
+        const op=["esquerda","centro","direita"];
+        defesa=op[Math.floor(Math.random()*3)];
+    }
+
+    if(dir==="esquerda") bola.style.left="30%";
+    if(dir==="centro") bola.style.left="47%";
+    if(dir==="direita") bola.style.left="65%";
+
+    bola.style.bottom="35vh";
+
+    if(defesa==="esquerda") goleiro.style.left="30%";
+    if(defesa==="direita") goleiro.style.left="65%";
+
+    setTimeout(()=>{
+
+        if(modoPergunta){
+
+            if(dir==="esquerda"){
+                resultado.innerHTML="Não aceitamos NÃO 😏";
+            }else{
+                document.getElementById("vencedor").style.display="block";
+                criarConfetes();
+            }
+
+        }else{
+
+            if(dir!==defesa){
+                gols++;
+                resultado.innerHTML="⚽ GOOOL!";
+                atualizar();
+            }else{
+                resultado.innerHTML="🧤 DEFENDEU!";
+            }
+
+        }
+
+        setTimeout(()=>{
+            resetar();
+            animando=false;
+        },500);
+
+    },400);
+}
+
 </script>
 
 </body>
