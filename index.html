@@ -2,14 +2,15 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Convite Especial</title>
+<title>Jogo de Pênalti Especial</title>
 <style>
 body{
     margin:0;
-    overflow:hidden;
-    font-family:Arial, sans-serif;
-    text-align:center;
     background:linear-gradient(#87ceeb,#2e8b57);
+    overflow:hidden;
+    font-family:Arial;
+    text-align:center;
+    touch-action: manipulation;
 }
 
 canvas{
@@ -20,66 +21,55 @@ canvas{
 
 #placar{
     position:absolute;
-    top:15px;
+    top:10px;
     left:50%;
     transform:translateX(-50%);
-    font-size:22px;
+    font-size:24px;
     font-weight:bold;
+}
+
+#mensagem{
+    position:absolute;
+    top:40%;
+    width:100%;
+    font-size:40px;
+    font-weight:bold;
+    display:none;
 }
 
 #pergunta{
     position:absolute;
     top:-200px;
     width:100%;
-    font-size:36px;
+    font-size:38px;
     font-weight:bold;
     transition:1s;
     display:none;
 }
 
-.botao{
+.botaoPergunta{
     position:absolute;
     bottom:100px;
     width:120px;
     height:60px;
     font-size:22px;
     font-weight:bold;
+    display:none;
     border:none;
     border-radius:10px;
-    display:none;
 }
 
-#sim{
-    right:20px;
-    background:lime;
-}
-
-#nao{
-    left:20px;
-    background:red;
-    color:white;
-}
-
-#final{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    width:90%;
-    font-size:28px;
-    font-weight:bold;
-    display:none;
-    white-space:pre-line;
-}
+#sim{ right:20px; background:lime; }
+#nao{ left:20px; background:red; color:white; }
 
 .confete{
     position:absolute;
     width:8px;
     height:8px;
-    animation:fall linear infinite;
+    animation:cair linear infinite;
 }
 
-@keyframes fall{
+@keyframes cair{
     from{ transform:translateY(-10px); }
     to{ transform:translateY(100vh); }
 }
@@ -88,10 +78,10 @@ canvas{
 <body>
 
 <div id="placar">Gols: 0/10</div>
+<div id="mensagem"></div>
 <div id="pergunta">Você aceita ser nosso paraninfo?</div>
-<button id="sim" class="botao">SIM</button>
-<button id="nao" class="botao">NÃO</button>
-<div id="final"></div>
+<button id="sim" class="botaoPergunta">SIM</button>
+<button id="nao" class="botaoPergunta">NÃO</button>
 
 <canvas id="game" width="400" height="600"></canvas>
 
@@ -102,21 +92,20 @@ const ctx = canvas.getContext("2d");
 let bolaX = 200;
 let bolaY = 500;
 let gols = 0;
-let perguntaAtiva = false;
+let fasePergunta = false;
 
-function desenhar(){
+function desenharCampo(){
     ctx.clearRect(0,0,400,600);
 
-    // Traves (sem trave inferior)
+    // Traves
     ctx.strokeStyle="white";
     ctx.lineWidth=6;
     ctx.beginPath();
-    ctx.moveTo(100,120);
-    ctx.lineTo(300,120);
-    ctx.moveTo(100,120);
-    ctx.lineTo(100,220);
-    ctx.moveTo(300,120);
-    ctx.lineTo(300,220);
+    ctx.moveTo(100,100);
+    ctx.lineTo(300,100);
+    ctx.lineTo(300,200);
+    ctx.moveTo(100,100);
+    ctx.lineTo(100,200);
     ctx.stroke();
 
     // Bola
@@ -126,91 +115,75 @@ function desenhar(){
     ctx.fill();
 }
 
-desenhar();
+desenharCampo();
 
-canvas.addEventListener("click", chutar);
-canvas.addEventListener("touchstart", chutar);
+canvas.addEventListener("click",chutar);
+canvas.addEventListener("touchstart",chutar);
 
 function chutar(e){
-    if(perguntaAtiva) return;
+    if(fasePergunta) return;
 
+    let alvoX = e.touches ? e.touches[0].clientX : e.clientX;
     let rect = canvas.getBoundingClientRect();
-    let x = e.touches ? e.touches[0].clientX : e.clientX;
-    x -= rect.left;
+    alvoX -= rect.left;
 
-    bolaX = x;
-    bolaY = 150;
-    desenhar();
+    bolaY = 120;
+    bolaX = alvoX;
 
     setTimeout(()=>{
         gols++;
         document.getElementById("placar").innerText="Gols: "+gols+"/10";
-        resetar();
-
-        if(gols === 10){
+        resetarBola();
+        if(gols==10){
             ativarPergunta();
         }
+    },500);
 
-    },400);
+    desenharCampo();
 }
 
-function resetar(){
-    bolaX = 200;
-    bolaY = 500;
-    desenhar();
+function resetarBola(){
+    bolaX=200;
+    bolaY=500;
+    desenharCampo();
 }
 
 function ativarPergunta(){
-    perguntaAtiva = true;
+    fasePergunta=true;
 
-    const pergunta = document.getElementById("pergunta");
+    const pergunta=document.getElementById("pergunta");
     pergunta.style.display="block";
     pergunta.style.top="40%";
 
     setTimeout(()=>{
-        pergunta.style.top="20px";
+        pergunta.style.top="10px";
         document.getElementById("sim").style.display="block";
         document.getElementById("nao").style.display="block";
     },1000);
 }
 
-document.getElementById("nao").onclick = function(){
-    alert("Não aceitamos não como resposta! Responda novamente.");
+document.getElementById("nao").onclick=function(){
+    document.getElementById("mensagem").innerText=
+    "Não aceitamos não como resposta! Responda novamente, você aceita?";
+    document.getElementById("mensagem").style.display="block";
 };
 
-document.getElementById("sim").onclick = function(){
-
-    // esconder tudo
-    canvas.style.display="none";
-    document.getElementById("placar").style.display="none";
-    document.getElementById("pergunta").style.display="none";
-    document.getElementById("sim").style.display="none";
-    document.getElementById("nao").style.display="none";
-
-    // mostrar mensagem final
-    const final = document.getElementById("final");
-    final.innerText =
-`É uma honra termos o senhor como nosso paraninfo!!
-
-A contagem regressiva para o grande dia começa agora!
-
-Te esperamos dia 25/05/2026 às 19h
-no Instituto Federal Fluminense
-Campus Campos Guarus!`;
-
-    final.style.display="block";
-
-    iniciarConfete();
+document.getElementById("sim").onclick=function(){
+    document.getElementById("mensagem").innerText=
+    "É uma honra termos o senhor como nosso paraninfo!!\n\nA contagem regressiva para o grande dia começa agora!\n\nTe esperamos dia 25/05/2026 às 19h no Instituto Federal Fluminense Campus Campos Guarus!";
+    document.getElementById("mensagem").style.display="block";
+    criarConfete();
 };
 
-function iniciarConfete(){
+function criarConfete(){
     setInterval(()=>{
-        const c = document.createElement("div");
-        c.classList.add("confete");
-        c.style.left = Math.random()*100 + "vw";
-        c.style.background = "hsl(" + Math.random()*360 + ",100%,50%)";
-        c.style.animationDuration = (Math.random()*3+2)+"s";
-        document.body.appendChild(c);
+        let confete=document.createElement("div");
+        confete.classList.add("confete");
+        confete.style.left=Math.random()*100+"vw";
+        confete.style.background=
+        "hsl("+Math.random()*360+",100%,50%)";
+        confete.style.animationDuration=(Math.random()*3+2)+"s";
+        document.body.appendChild(confete);
     },100);
 }
 </script>
