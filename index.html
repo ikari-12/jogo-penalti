@@ -1,160 +1,162 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Jogo de Pênalti PRO</title>
-    <style>
-        body {
-            margin: 0;
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #87ceeb 40%, #2ecc71 40%);
-        }
+<meta charset="UTF-8">
+<title>Jogo de Pênalti PRO</title>
 
-        h1 {
-            color: white;
-            margin-top: 10px;
-        }
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    text-align:center;
+    background:linear-gradient(#87ceeb 40%, #2ecc71 40%);
+}
 
-        .campo {
-            position: relative;
-            width: 800px;
-            height: 500px;
-            margin: 20px auto;
-            background: repeating-linear-gradient(
-                90deg,
-                #2ecc71,
-                #2ecc71 50px,
-                #27ae60 50px,
-                #27ae60 100px
-            );
-            border: 5px solid white;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            overflow: hidden;
-        }
+/* CAMPO */
+.campo{
+    position:relative;
+    width:800px;
+    height:500px;
+    margin:20px auto;
+    background:repeating-linear-gradient(
+        90deg,
+        #2ecc71 0px,
+        #2ecc71 60px,
+        #27ae60 60px,
+        #27ae60 120px
+    );
+    border:5px solid white;
+    box-shadow:0 0 20px rgba(0,0,0,0.5);
+}
 
-        /* Área do gol */
-        .area {
-            position: absolute;
-            top: 100px;
-            left: 200px;
-            width: 400px;
-            height: 250px;
-            border: 4px solid white;
-        }
+/* GRANDE ÁREA */
+.area{
+    position:absolute;
+    top:80px;
+    left:50%;
+    transform:translateX(-50%);
+    width:400px;
+    height:220px;
+    border:4px solid white;
+}
 
-        /* Pequena área */
-        .pequena-area {
-            position: absolute;
-            top: 100px;
-            left: 300px;
-            width: 200px;
-            height: 120px;
-            border: 4px solid white;
-        }
+/* PEQUENA ÁREA */
+.pequena{
+    position:absolute;
+    top:80px;
+    left:50%;
+    transform:translateX(-50%);
+    width:200px;
+    height:120px;
+    border:4px solid white;
+}
 
-        /* Marca do pênalti */
-        .marca {
-            position: absolute;
-            bottom: 140px;
-            left: 390px;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-        }
+/* MARCA DO PENALTI */
+.marca{
+    position:absolute;
+    bottom:150px;
+    left:50%;
+    transform:translateX(-50%);
+    width:15px;
+    height:15px;
+    background:white;
+    border-radius:50%;
+}
 
-        /* Gol */
-        .gol {
-            position: absolute;
-            top: 60px;
-            left: 275px;
-            width: 250px;
-            height: 140px;
-            background: rgba(255,255,255,0.1);
-            border: 6px solid white;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-        }
+/* GOL */
+.gol{
+    position:absolute;
+    top:40px;
+    left:50%;
+    transform:translateX(-50%);
+    width:260px;
+    height:120px;
+    border:6px solid white;
+    background:rgba(255,255,255,0.08);
+}
 
-        /* Rede */
-        .gol::after {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.4) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.4) 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
+/* REDE */
+.gol::after{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background-image:
+    linear-gradient(to right, rgba(255,255,255,0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.4) 1px, transparent 1px);
+    background-size:18px 18px;
+}
 
-        /* GOLEIRO */
-        .goleiro {
-            position: absolute;
-            top: 150px;
-            left: 380px;
-            width: 40px;
-            height: 120px;
-            transition: all 0.4s ease;
-        }
+/* GOLEIRO */
+.goleiro{
+    position:absolute;
+    top:130px;
+    left:50%;
+    transform:translateX(-50%);
+    width:40px;
+    transition:0.4s ease;
+}
 
-        .cabeca {
-            width: 35px;
-            height: 35px;
-            background: #f1c27d;
-            border-radius: 50%;
-            margin: auto;
-        }
+.cabeca{
+    width:35px;
+    height:35px;
+    background:#f1c27d;
+    border-radius:50%;
+    margin:auto;
+}
 
-        .corpo {
-            width: 30px;
-            height: 50px;
-            background: blue;
-            margin: auto;
-        }
+.corpo{
+    width:30px;
+    height:50px;
+    background:blue;
+    margin:auto;
+}
 
-        .bracos {
-            position: absolute;
-            top: 40px;
-            left: -20px;
-            width: 80px;
-            height: 10px;
-            background: blue;
-        }
+.bracos{
+    position:absolute;
+    top:40px;
+    left:-20px;
+    width:80px;
+    height:10px;
+    background:blue;
+}
 
-        .pernas {
-            width: 30px;
-            height: 40px;
-            background: black;
-            margin: auto;
-        }
+.pernas{
+    width:30px;
+    height:40px;
+    background:black;
+    margin:auto;
+}
 
-        /* Bola */
-        .bola {
-            position: absolute;
-            bottom: 60px;
-            left: 390px;
-            font-size: 45px;
-            transition: all 0.4s ease;
-        }
+/* BOLA */
+.bola{
+    position:absolute;
+    bottom:80px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:40px;
+    transition:0.4s ease;
+}
 
-        .botoes {
-            margin-top: 15px;
-        }
+/* BOTÕES */
+.botoes{
+    margin-top:15px;
+}
 
-        button {
-            padding: 10px 25px;
-            font-size: 18px;
-            margin: 5px;
-            cursor: pointer;
-        }
+button{
+    padding:10px 25px;
+    font-size:18px;
+    margin:5px;
+    cursor:pointer;
+}
 
-        #resultado {
-            font-size: 28px;
-            color: white;
-            margin-top: 10px;
-            height: 40px;
-        }
-    </style>
+#resultado{
+    font-size:28px;
+    color:white;
+    margin-top:10px;
+    height:40px;
+}
+</style>
 </head>
 <body>
 
@@ -163,7 +165,7 @@
 <div class="campo">
 
     <div class="area"></div>
-    <div class="pequena-area"></div>
+    <div class="pequena"></div>
     <div class="marca"></div>
     <div class="gol"></div>
 
@@ -190,7 +192,7 @@
 
 let animando = false;
 
-function chutar(direcaoJogador){
+function chutar(direcao){
 
     if(animando) return;
     animando = true;
@@ -199,44 +201,49 @@ function chutar(direcaoJogador){
     const bola = document.getElementById("bola");
     const resultado = document.getElementById("resultado");
 
-    const opcoes = ['esquerda','centro','direita'];
-    const direcaoGoleiro = opcoes[Math.floor(Math.random()*3)];
+    const opcoes = ["esquerda","centro","direita"];
+    const defesa = opcoes[Math.floor(Math.random()*3)];
 
     resultado.innerHTML = "";
 
-    goleiro.style.left = "380px";
-    goleiro.style.transform = "rotate(0deg)";
-    bola.style.left = "390px";
-    bola.style.bottom = "60px";
+    // RESET
+    goleiro.style.left = "50%";
+    goleiro.style.transform = "translateX(-50%) rotate(0deg)";
+    bola.style.left = "50%";
+    bola.style.transform = "translateX(-50%)";
+    bola.style.bottom = "80px";
 
     setTimeout(()=>{
 
-        if(direcaoJogador === "esquerda") bola.style.left = "300px";
-        if(direcaoJogador === "centro") bola.style.left = "390px";
-        if(direcaoJogador === "direita") bola.style.left = "480px";
-
-        bola.style.bottom = "300px";
-
-        if(direcaoGoleiro === "esquerda"){
-            goleiro.style.left = "300px";
-            goleiro.style.transform = "rotate(-25deg)";
+        if(direcao==="esquerda"){
+            bola.style.left="40%";
         }
-        if(direcaoGoleiro === "direita"){
-            goleiro.style.left = "460px";
-            goleiro.style.transform = "rotate(25deg)";
+        if(direcao==="direita"){
+            bola.style.left="60%";
+        }
+
+        bola.style.bottom="300px";
+
+        if(defesa==="esquerda"){
+            goleiro.style.left="40%";
+            goleiro.style.transform="translateX(-50%) rotate(-25deg)";
+        }
+        if(defesa==="direita"){
+            goleiro.style.left="60%";
+            goleiro.style.transform="translateX(-50%) rotate(25deg)";
         }
 
     },100);
 
     setTimeout(()=>{
 
-        if(direcaoJogador === direcaoGoleiro){
-            resultado.innerHTML = "🧤 DEFENDEU!";
-        } else {
-            resultado.innerHTML = "⚽ GOOOOOL!";
+        if(direcao===defesa){
+            resultado.innerHTML="🧤 DEFENDEU!";
+        }else{
+            resultado.innerHTML="⚽ GOOOOOL!";
         }
 
-        animando = false;
+        animando=false;
 
     },600);
 }
