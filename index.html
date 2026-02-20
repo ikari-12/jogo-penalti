@@ -1,295 +1,252 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Jogo de Pênalti PRO</title>
-    <style>
-        body {
-            margin: 0;
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to top, #2ecc71 70%, #87ceeb 30%);
-            overflow: hidden;
-        }
+<meta charset="UTF-8">
+<title>Penalti Especial</title>
+<style>
+body{
+    margin:0;
+    background:linear-gradient(to top,#2e8b57 60%,#87ceeb 60%);
+    overflow:hidden;
+    font-family:Arial;
+    text-align:center;
+}
 
-        h1 { color: white; margin-top: 10px; }
+#score{
+    position:absolute;
+    top:20px;
+    left:20px;
+    font-size:24px;
+    font-weight:bold;
+}
 
-        #placar { font-size: 24px; color: yellow; }
+#question{
+    position:absolute;
+    width:100%;
+    top:40%;
+    font-size:40px;
+    font-weight:bold;
+    display:none;
+    transition:all 1s ease;
+}
 
-        #meta { color: white; font-size: 18px; margin-bottom: 10px; }
+#answerLeft,#answerRight{
+    position:absolute;
+    top:55%;
+    font-size:30px;
+    font-weight:bold;
+    display:none;
+    cursor:pointer;
+}
 
-        .campo {
-            position: relative;
-            width: 700px;
-            height: 450px;
-            margin: 20px auto;
-            background: #27ae60;
-            border: 4px solid white;
-            border-bottom: none;
-        }
+#answerLeft{ left:20%; }
+#answerRight{ right:20%; }
 
-        /* GOL SEM TRAVE INFERIOR */
-        .gol {
-            position: absolute;
-            top: 40px;
-            left: 200px;
-            width: 300px;
-            height: 150px;
-            border-left: 5px solid white;
-            border-right: 5px solid white;
-            border-top: 5px solid white;
-        }
+#message{
+    position:absolute;
+    width:100%;
+    top:45%;
+    font-size:45px;
+    font-weight:bold;
+    display:none;
+}
 
-        .goleiro {
-            position: absolute;
-            top: 120px;
-            left: 330px;
-            width: 40px;
-            height: 120px;
-            transition: all 0.4s ease;
-        }
+#field{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:300px;
+}
 
-        .cabeca {
-            width: 35px;
-            height: 35px;
-            background: #f1c27d;
-            border-radius: 50%;
-            margin: auto;
-        }
+#goal{
+    position:absolute;
+    bottom:250px;
+    left:50%;
+    transform:translateX(-50%);
+    width:300px;
+    height:150px;
+}
 
-        .corpo {
-            width: 30px;
-            height: 50px;
-            background: blue;
-            margin: auto;
-        }
+.post{
+    position:absolute;
+    background:white;
+}
 
-        .bracos {
-            position: absolute;
-            top: 40px;
-            left: -20px;
-            width: 80px;
-            height: 10px;
-            background: blue;
-        }
+#leftPost{
+    width:10px;
+    height:150px;
+    left:0;
+}
 
-        .pernas {
-            width: 30px;
-            height: 40px;
-            background: black;
-            margin: auto;
-        }
+#rightPost{
+    width:10px;
+    height:150px;
+    right:0;
+}
 
-        .bola {
-            position: absolute;
-            bottom: 40px;
-            left: 340px;
-            font-size: 45px;
-            transition: all 0.4s ease;
-        }
+#crossbar{
+    width:300px;
+    height:10px;
+    top:0;
+}
 
-        .botoes { margin-top: 15px; }
+#goalkeeper{
+    position:absolute;
+    bottom:250px;
+    left:50%;
+    transform:translateX(-50%);
+    width:50px;
+    height:80px;
+    background:red;
+    border-radius:10px;
+    transition:0.4s;
+}
 
-        button {
-            padding: 10px 25px;
-            font-size: 18px;
-            margin: 5px;
-            cursor: pointer;
-        }
+#ball{
+    position:absolute;
+    bottom:80px;
+    left:50%;
+    transform:translateX(-50%);
+    width:40px;
+    height:40px;
+    background:white;
+    border-radius:50%;
+    transition:0.5s;
+}
 
-        button:disabled { opacity: 0.5; }
+.confetti{
+    position:absolute;
+    width:10px;
+    height:10px;
+    background:random;
+    animation:fall 100s linear infinite;
+}
 
-        #resultado {
-            font-size: 24px;
-            color: white;
-            margin-top: 10px;
-            min-height: 40px;
-        }
-
-        /* PERGUNTA GRANDE */
-        #perguntaGrande {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 42px;
-            font-weight: bold;
-            color: white;
-            display: none;
-            z-index: 10;
-            transition: all 1s ease;
-        }
-
-        /* CONFETE */
-        .confete {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            top: -10px;
-            animation: cair linear forwards;
-        }
-
-        @keyframes cair {
-            to {
-                transform: translateY(100vh) rotate(720deg);
-            }
-        }
-
-    </style>
+@keyframes fall{
+    from{ transform:translateY(-100px) rotate(0deg);}
+    to{ transform:translateY(800px) rotate(360deg);}
+}
+</style>
 </head>
+
 <body>
 
-<h1>⚽ Jogo de Pênalti PRO</h1>
-<div id="placar">Gols: 0</div>
-<div id="meta">Faça 10 gols para desbloquear a pergunta</div>
+<div id="score">Gols: 0 / 10</div>
 
-<div id="perguntaGrande"></div>
+<div id="question">Você aceita ser nosso paraninfo?</div>
+<div id="answerLeft">NÃO</div>
+<div id="answerRight">SIM</div>
 
-<div class="campo">
-    <div class="gol"></div>
+<div id="message"></div>
 
-    <div class="goleiro" id="goleiro">
-        <div class="cabeca"></div>
-        <div class="corpo"></div>
-        <div class="bracos"></div>
-        <div class="pernas"></div>
-    </div>
-
-    <div class="bola" id="bola">⚽</div>
+<div id="goal">
+    <div id="leftPost" class="post"></div>
+    <div id="rightPost" class="post"></div>
+    <div id="crossbar" class="post"></div>
 </div>
 
-<div class="botoes">
-    <button onclick="chutar('esquerda')" id="btn1">Esquerda (NÃO)</button>
-    <button onclick="chutar('centro')" id="btn2">Centro</button>
-    <button onclick="chutar('direita')" id="btn3">Direita (SIM)</button>
-</div>
-
-<div id="resultado"></div>
+<div id="goalkeeper"></div>
+<div id="ball"></div>
 
 <script>
 
-let animando = false;
 let gols = 0;
-let modoPergunta = false;
+let podeChutar = true;
+let perguntaAtiva = false;
 
-function desativarBotoes(valor){
-    btn1.disabled = valor;
-    btn2.disabled = valor;
-    btn3.disabled = valor;
+const ball = document.getElementById("ball");
+const keeper = document.getElementById("goalkeeper");
+const score = document.getElementById("score");
+const question = document.getElementById("question");
+const answerLeft = document.getElementById("answerLeft");
+const answerRight = document.getElementById("answerRight");
+const message = document.getElementById("message");
+
+function resetBall(){
+    ball.style.left="50%";
+    ball.style.bottom="80px";
+    ball.style.transform="translateX(-50%)";
+    keeper.style.left="50%";
 }
 
-function resetar(){
-    goleiro.style.left = "330px";
-    goleiro.style.transform = "rotate(0deg)";
-    bola.style.left = "340px";
-    bola.style.bottom = "40px";
-}
-
-function mostrarPerguntaAnimada(){
-    const pergunta = document.getElementById("perguntaGrande");
-    pergunta.innerHTML = "Você aceita ser nosso parainfo?";
-    pergunta.style.display = "block";
+function mostrarPergunta(){
+    perguntaAtiva=true;
+    question.style.display="block";
+    question.style.top="40%";
+    question.style.fontSize="40px";
 
     setTimeout(()=>{
-        pergunta.style.top = "60px";
-        pergunta.style.transform = "translateX(-50%)";
+        question.style.top="10px";
+        question.style.fontSize="24px";
+        answerLeft.style.display="block";
+        answerRight.style.display="block";
     },1000);
-
-    modoPergunta = true;
 }
 
-function confete(){
+function criarConfete(){
     for(let i=0;i<100;i++){
-        const c = document.createElement("div");
-        c.classList.add("confete");
-        c.style.left = Math.random()*100 + "vw";
-        c.style.background = `hsl(${Math.random()*360},100%,50%)`;
-        c.style.animationDuration = (Math.random()*3+2)+"s";
-        document.body.appendChild(c);
-
-        setTimeout(()=>{ c.remove(); },5000);
+        let conf = document.createElement("div");
+        conf.classList.add("confetti");
+        conf.style.left=Math.random()*window.innerWidth+"px";
+        conf.style.backgroundColor=`hsl(${Math.random()*360},100%,50%)`;
+        conf.style.animationDuration=(Math.random()*3+2)+"s";
+        document.body.appendChild(conf);
     }
 }
 
-function chutar(direcaoJogador){
+function chutar(lado){
+    if(!podeChutar) return;
+    podeChutar=false;
 
-    if(animando) return;
-    animando = true;
-    desativarBotoes(true);
-    resultado.innerHTML = "";
-    resetar();
-
-    let direcaoGoleiro;
-
-    if(modoPergunta){
-        if(direcaoJogador === "esquerda"){
-            direcaoGoleiro = "esquerda";
-        } else {
-            direcaoGoleiro = "centro";
-        }
-    } else {
-        const opcoes = ['esquerda','centro','direita'];
-        direcaoGoleiro = opcoes[Math.floor(Math.random()*3)];
-    }
+    ball.style.bottom="260px";
+    ball.style.left=lado==="left"?"35%":lado==="right"?"65%":"50%";
 
     setTimeout(()=>{
 
-        if(direcaoJogador === "esquerda") bola.style.left = "250px";
-        if(direcaoJogador === "centro") bola.style.left = "340px";
-        if(direcaoJogador === "direita") bola.style.left = "430px";
+        if(perguntaAtiva){
 
-        bola.style.bottom = "260px";
-
-        if(direcaoGoleiro === "esquerda"){
-            goleiro.style.left = "250px";
-        }
-        if(direcaoGoleiro === "centro"){
-            goleiro.style.left = "330px";
-        }
-        if(direcaoGoleiro === "direita"){
-            goleiro.style.left = "410px";
-        }
-
-    },100);
-
-    setTimeout(()=>{
-
-        if(modoPergunta){
-
-            if(direcaoJogador === "esquerda"){
-                resultado.innerHTML = "Não aceitamos NÃO como resposta 😏";
-            } 
-            else if(direcaoJogador === "direita"){
-                const pergunta = document.getElementById("perguntaGrande");
-                pergunta.style.top = "50%";
-                pergunta.style.transform = "translate(-50%, -50%)";
-                pergunta.innerHTML = "🎉 VOCÊ É O MELHOR!";
-                confete();
+            if(lado==="right"){
+                message.innerText="VOCÊ É O MELHOR!";
+                message.style.display="block";
+                criarConfete();
+            }else{
+                message.innerText="Não aceitamos NÃO como resposta! Responda novamente.";
+                message.style.display="block";
+                keeper.style.left="35%";
+                setTimeout(()=>{ keeper.style.left="50%"; },500);
             }
 
-        } else {
+            setTimeout(()=>{
+                message.style.display="none";
+                resetBall();
+                podeChutar=true;
+            },2000);
 
-            if(direcaoJogador === direcaoGoleiro){
-                resultado.innerHTML = "🧤 DEFENDEU!";
-            } else {
-                resultado.innerHTML = "⚽ GOOOOOL!";
-                gols++;
-                document.getElementById("placar").innerHTML = "Gols: " + gols;
+        }else{
 
-                if(gols === 10){
-                    mostrarPerguntaAnimada();
-                }
+            gols++;
+            score.innerText="Gols: "+gols+" / 10";
+
+            if(gols===10){
+                mostrarPergunta();
             }
 
+            resetBall();
+            podeChutar=true;
         }
 
     },500);
-
-    setTimeout(()=>{
-        resetar();
-        animando = false;
-        desativarBotoes(false);
-    },1000);
 }
+
+document.addEventListener("click",(e)=>{
+    if(!perguntaAtiva){
+        if(e.clientX<window.innerWidth/2) chutar("left");
+        else chutar("right");
+    }else{
+        if(e.clientX<window.innerWidth/2) chutar("left");
+        else chutar("right");
+    }
+});
 
 </script>
 
