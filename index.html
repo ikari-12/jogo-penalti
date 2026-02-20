@@ -20,7 +20,6 @@ h1{color:white;font-size:6vw;}
     color:white;
     font-size:7vw;
     margin-top:10px;
-    transition:0.5s;
 }
 
 .campo{
@@ -59,17 +58,17 @@ h1{color:white;font-size:6vw;}
 
 .goleiro{
     position:absolute;
-    top:18vh;
+    top:14vh;
     left:42%;
-    width:12vw;
-    height:20vh;
+    width:16vw;
+    height:24vh;
     transition:0.4s;
     text-align:center;
 }
 
 .cabeca{
-    width:15vw;
-    height:15vw;
+    width:16vw;
+    height:16vw;
     object-fit:cover;
     border-radius:50%;
     border:2px solid white;
@@ -149,7 +148,6 @@ button{
     <div class="opcao" id="sim">SIM</div>
 
     <div class="goleiro" id="goleiro">
-        <!-- 🔥 IMAGEM AQUI -->
         <img src="cabeca.png" class="cabeca">
         <div class="corpo"></div>
     </div>
@@ -193,7 +191,7 @@ function criarConfetes(){
 }
 
 function resetar(){
-    goleiro.style.left="45%";
+    goleiro.style.left="42%";
     bola.style.left="47%";
     bola.style.bottom="5vh";
 }
@@ -256,7 +254,7 @@ function chutar(dir){
 
     bola.style.bottom="35vh";
 
-    if(defesa==="esquerda") goleiro.style.left="30%";
+    if(defesa==="esquerda") goleiro.style.left="20%";
     if(defesa==="direita") goleiro.style.left="65%";
 
     setTimeout(()=>{
