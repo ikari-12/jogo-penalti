@@ -1,77 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Jogo de Pênalti Animado</title>
+    <title>Jogo de Pênalti PRO</title>
     <style>
         body {
-            text-align: center;
-            font-family: Arial;
-            background: linear-gradient(to top, #2ecc71 70%, #87ceeb 30%);
             margin: 0;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to top, #2ecc71 70%, #87ceeb 30%);
             overflow: hidden;
         }
 
         h1 {
-            margin-top: 10px;
             color: white;
+            margin-top: 10px;
         }
 
         .campo {
             position: relative;
-            width: 600px;
-            height: 400px;
-            margin: auto;
-            border: 3px solid white;
+            width: 700px;
+            height: 450px;
+            margin: 20px auto;
+            background: #27ae60;
+            border: 4px solid white;
             border-bottom: none;
-            background-color: #27ae60;
         }
 
         .gol {
             position: absolute;
-            top: 20px;
-            left: 150px;
+            top: 40px;
+            left: 200px;
             width: 300px;
-            height: 120px;
+            height: 150px;
             border: 5px solid white;
         }
 
         .goleiro {
             position: absolute;
-            top: 80px;
-            left: 260px;
-            font-size: 50px;
-            transition: 0.5s;
+            top: 110px;
+            left: 325px;
+            font-size: 60px;
+            transition: all 0.4s ease;
         }
 
         .bola {
             position: absolute;
-            bottom: 20px;
-            left: 280px;
-            font-size: 40px;
-            transition: 0.5s;
+            bottom: 40px;
+            left: 340px;
+            font-size: 45px;
+            transition: all 0.4s ease;
         }
 
         .botoes {
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         button {
-            padding: 10px 20px;
+            padding: 10px 25px;
             font-size: 18px;
             margin: 5px;
             cursor: pointer;
         }
 
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         #resultado {
-            font-size: 24px;
-            margin-top: 10px;
+            font-size: 28px;
             color: white;
+            margin-top: 10px;
+            height: 40px;
         }
     </style>
 </head>
 <body>
 
-<h1>⚽ Jogo de Pênalti Animado</h1>
+<h1>⚽ Jogo de Pênalti PRO</h1>
 
 <div class="campo">
     <div class="gol"></div>
@@ -80,64 +86,60 @@
 </div>
 
 <div class="botoes">
-    <button onclick="chutar('esquerda')">Esquerda</button>
-    <button onclick="chutar('centro')">Centro</button>
-    <button onclick="chutar('direita')">Direita</button>
+    <button onclick="chutar('esquerda')" id="btn1">Esquerda</button>
+    <button onclick="chutar('centro')" id="btn2">Centro</button>
+    <button onclick="chutar('direita')" id="btn3">Direita</button>
 </div>
 
 <div id="resultado"></div>
 
 <script>
 
-let bloqueado = false;
+let animando = false;
+
+function desativarBotoes(valor){
+    document.getElementById("btn1").disabled = valor;
+    document.getElementById("btn2").disabled = valor;
+    document.getElementById("btn3").disabled = valor;
+}
 
 function chutar(direcaoJogador){
 
-    if(bloqueado) return;
-    bloqueado = true;
+    if(animando) return;
+    animando = true;
+    desativarBotoes(true);
 
-    let goleiro = document.getElementById("goleiro");
-    let bola = document.getElementById("bola");
-    let resultado = document.getElementById("resultado");
+    const goleiro = document.getElementById("goleiro");
+    const bola = document.getElementById("bola");
+    const resultado = document.getElementById("resultado");
 
-    let opcoes = ['esquerda', 'centro', 'direita'];
-    let direcaoGoleiro = opcoes[Math.floor(Math.random()*3)];
+    const opcoes = ['esquerda','centro','direita'];
+    const direcaoGoleiro = opcoes[Math.floor(Math.random()*3)];
 
-    // Reset posição
-    goleiro.style.left = "260px";
-    bola.style.left = "280px";
-    bola.style.bottom = "20px";
     resultado.innerHTML = "";
 
-    setTimeout(() => {
+    // POSIÇÕES INICIAIS
+    goleiro.style.left = "325px";
+    bola.style.left = "340px";
+    bola.style.bottom = "40px";
 
-        // Movimento da bola
-        if(direcaoJogador === "esquerda"){
-            bola.style.left = "200px";
-        }
-        if(direcaoJogador === "centro"){
-            bola.style.left = "280px";
-        }
-        if(direcaoJogador === "direita"){
-            bola.style.left = "360px";
-        }
+    setTimeout(()=>{
 
-        bola.style.bottom = "250px";
+        // MOVIMENTO BOLA
+        if(direcaoJogador === "esquerda") bola.style.left = "250px";
+        if(direcaoJogador === "centro") bola.style.left = "340px";
+        if(direcaoJogador === "direita") bola.style.left = "430px";
 
-        // Movimento do goleiro
-        if(direcaoGoleiro === "esquerda"){
-            goleiro.style.left = "200px";
-        }
-        if(direcaoGoleiro === "centro"){
-            goleiro.style.left = "260px";
-        }
-        if(direcaoGoleiro === "direita"){
-            goleiro.style.left = "320px";
-        }
+        bola.style.bottom = "260px";
 
-    }, 100);
+        // MOVIMENTO GOLEIRO
+        if(direcaoGoleiro === "esquerda") goleiro.style.left = "250px";
+        if(direcaoGoleiro === "centro") goleiro.style.left = "325px";
+        if(direcaoGoleiro === "direita") goleiro.style.left = "400px";
 
-    setTimeout(() => {
+    },100);
+
+    setTimeout(()=>{
 
         if(direcaoJogador === direcaoGoleiro){
             resultado.innerHTML = "🧤 DEFENDEU!";
@@ -145,9 +147,19 @@ function chutar(direcaoJogador){
             resultado.innerHTML = "⚽ GOOOOOL!";
         }
 
-        bloqueado = false;
+    },500);
 
-    }, 700);
+    setTimeout(()=>{
+
+        // RESET
+        goleiro.style.left = "325px";
+        bola.style.left = "340px";
+        bola.style.bottom = "40px";
+
+        animando = false;
+        desativarBotoes(false);
+
+    },1000);
 }
 
 </script>
