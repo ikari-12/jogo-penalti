@@ -2,62 +2,50 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Pênalti 3D</title>
+<title>Jogo de Pênalti 2D</title>
 
 <style>
 
 body{
     margin:0;
-    background:linear-gradient(#87ceeb 50%, #2ecc71 50%);
+    font-family:Arial, sans-serif;
+    background:#2ecc71;
     display:flex;
     flex-direction:column;
     align-items:center;
-    font-family:Arial;
 }
 
-/* CENA 3D */
-.cena{
-    perspective:1000px;
-    margin-top:20px;
-}
-
-/* CAMPO EM 3D */
+/* CAMPO */
 .campo{
-    width:800px;
-    height:500px;
-    background:repeating-linear-gradient(
-        90deg,
-        #2ecc71 0px,
-        #2ecc71 60px,
-        #27ae60 60px,
-        #27ae60 120px
-    );
-    border:5px solid white;
-    transform:rotateX(60deg);
-    transform-origin:bottom;
     position:relative;
+    width:90%;
+    max-width:800px;
+    height:450px;
+    background:#27ae60;
+    border:5px solid white;
+    margin-top:20px;
+    overflow:hidden;
 }
 
 /* GOL */
 .gol{
     position:absolute;
-    top:40px;
+    top:20px;
     left:50%;
     transform:translateX(-50%);
-    width:250px;
-    height:120px;
+    width:40%;
+    height:100px;
     border:5px solid white;
-    background:rgba(255,255,255,0.1);
 }
 
 /* GOLEIRO */
 .goleiro{
     position:absolute;
-    top:100px;
+    top:70px;
     left:50%;
     transform:translateX(-50%);
     width:40px;
-    height:100px;
+    height:80px;
     background:blue;
     transition:0.4s ease;
 }
@@ -65,11 +53,11 @@ body{
 /* BOLA */
 .bola{
     position:absolute;
-    bottom:80px;
+    bottom:30px;
     left:50%;
-    transform:translateX(-50%) scale(1);
+    transform:translateX(-50%);
     font-size:40px;
-    transition:0.5s ease;
+    transition:0.4s ease;
 }
 
 button{
@@ -80,25 +68,26 @@ button{
 }
 
 #resultado{
-    font-size:28px;
-    margin-top:10px;
+    font-size:26px;
     color:white;
+    margin-top:10px;
+    height:40px;
 }
 
 </style>
 </head>
 <body>
 
-<h1>⚽ Pênalti 3D</h1>
+<h1>⚽ Jogo de Pênalti 2D</h1>
 
-<div class="cena">
-    <div class="campo">
+<div class="campo">
 
-        <div class="gol"></div>
-        <div class="goleiro" id="goleiro"></div>
-        <div class="bola" id="bola">⚽</div>
+    <div class="gol"></div>
 
-    </div>
+    <div class="goleiro" id="goleiro"></div>
+
+    <div class="bola" id="bola">⚽</div>
+
 </div>
 
 <div>
@@ -111,16 +100,16 @@ button{
 
 <script>
 
-let animando = false;
+let animando=false;
 
-function chutar(dir){
+function chutar(direcao){
 
     if(animando) return;
-    animando = true;
+    animando=true;
 
-    const goleiro = document.getElementById("goleiro");
-    const bola = document.getElementById("bola");
-    const resultado = document.getElementById("resultado");
+    const goleiro=document.getElementById("goleiro");
+    const bola=document.getElementById("bola");
+    const resultado=document.getElementById("resultado");
 
     const opcoes=["esquerda","centro","direita"];
     const defesa=opcoes[Math.floor(Math.random()*3)];
@@ -130,25 +119,23 @@ function chutar(dir){
     // RESET
     goleiro.style.left="50%";
     bola.style.left="50%";
-    bola.style.bottom="80px";
-    bola.style.transform="translateX(-50%) scale(1)";
+    bola.style.bottom="30px";
 
     setTimeout(()=>{
 
-        if(dir==="esquerda") bola.style.left="35%";
-        if(dir==="direita") bola.style.left="65%";
+        if(direcao==="esquerda") bola.style.left="30%";
+        if(direcao==="direita") bola.style.left="70%";
 
-        bola.style.bottom="350px";
-        bola.style.transform="translateX(-50%) scale(0.6)";
+        bola.style.bottom="300px";
 
-        if(defesa==="esquerda") goleiro.style.left="35%";
-        if(defesa==="direita") goleiro.style.left="65%";
+        if(defesa==="esquerda") goleiro.style.left="30%";
+        if(defesa==="direita") goleiro.style.left="70%";
 
     },100);
 
     setTimeout(()=>{
 
-        if(dir===defesa){
+        if(direcao===defesa){
             resultado.innerHTML="🧤 DEFENDEU!";
         }else{
             resultado.innerHTML="⚽ GOOOOOL!";
@@ -156,7 +143,8 @@ function chutar(dir){
 
         animando=false;
 
-    },700);
+    },600);
+
 }
 
 </script>
