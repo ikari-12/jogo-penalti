@@ -27,13 +27,16 @@
             border-bottom: none;
         }
 
+        /* GOL SEM TRAVE INFERIOR */
         .gol {
             position: absolute;
             top: 40px;
             left: 200px;
             width: 300px;
             height: 150px;
-            border: 5px solid white;
+            border-left: 5px solid white;
+            border-right: 5px solid white;
+            border-top: 5px solid white;
         }
 
         .goleiro {
@@ -96,22 +99,40 @@
         button:disabled { opacity: 0.5; }
 
         #resultado {
-            font-size: 26px;
+            font-size: 24px;
             color: white;
             margin-top: 10px;
             min-height: 40px;
         }
 
-        .opcao {
-            position: absolute;
-            top: 80px;
-            font-size: 22px;
+        /* PERGUNTA GRANDE */
+        #perguntaGrande {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 42px;
             font-weight: bold;
             color: white;
+            display: none;
+            z-index: 10;
+            transition: all 1s ease;
         }
 
-        #nao { left: 210px; }
-        #sim { right: 210px; }
+        /* CONFETE */
+        .confete {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            animation: cair linear forwards;
+        }
+
+        @keyframes cair {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
 
     </style>
 </head>
@@ -121,11 +142,10 @@
 <div id="placar">Gols: 0</div>
 <div id="meta">Faça 10 gols para desbloquear a pergunta</div>
 
+<div id="perguntaGrande"></div>
+
 <div class="campo">
     <div class="gol"></div>
-
-    <div class="opcao" id="nao" style="display:none;">NÃO</div>
-    <div class="opcao" id="sim" style="display:none;">SIM</div>
 
     <div class="goleiro" id="goleiro">
         <div class="cabeca"></div>
@@ -138,9 +158,9 @@
 </div>
 
 <div class="botoes">
-    <button onclick="chutar('esquerda')" id="btn1">Esquerda</button>
+    <button onclick="chutar('esquerda')" id="btn1">Esquerda (NÃO)</button>
     <button onclick="chutar('centro')" id="btn2">Centro</button>
-    <button onclick="chutar('direita')" id="btn3">Direita</button>
+    <button onclick="chutar('direita')" id="btn3">Direita (SIM)</button>
 </div>
 
 <div id="resultado"></div>
@@ -150,23 +170,11 @@
 let animando = false;
 let gols = 0;
 let modoPergunta = false;
-let ultimaDefesa = "";
 
 function desativarBotoes(valor){
     btn1.disabled = valor;
     btn2.disabled = valor;
     btn3.disabled = valor;
-}
-
-function atualizarPlacar(){
-    document.getElementById("placar").innerHTML = "Gols: " + gols;
-
-    if(gols >= 10 && !modoPergunta){
-        modoPergunta = true;
-        document.getElementById("meta").innerHTML = "Você aceita ser nosso paraninfo?";
-        document.getElementById("nao").style.display = "block";
-        document.getElementById("sim").style.display = "block";
-    }
 }
 
 function resetar(){
@@ -176,12 +184,37 @@ function resetar(){
     bola.style.bottom = "40px";
 }
 
+function mostrarPerguntaAnimada(){
+    const pergunta = document.getElementById("perguntaGrande");
+    pergunta.innerHTML = "Você aceita ser nosso parainfo?";
+    pergunta.style.display = "block";
+
+    setTimeout(()=>{
+        pergunta.style.top = "60px";
+        pergunta.style.transform = "translateX(-50%)";
+    },1000);
+
+    modoPergunta = true;
+}
+
+function confete(){
+    for(let i=0;i<100;i++){
+        const c = document.createElement("div");
+        c.classList.add("confete");
+        c.style.left = Math.random()*100 + "vw";
+        c.style.background = `hsl(${Math.random()*360},100%,50%)`;
+        c.style.animationDuration = (Math.random()*3+2)+"s";
+        document.body.appendChild(c);
+
+        setTimeout(()=>{ c.remove(); },5000);
+    }
+}
+
 function chutar(direcaoJogador){
 
     if(animando) return;
     animando = true;
     desativarBotoes(true);
-
     resultado.innerHTML = "";
     resetar();
 
@@ -189,7 +222,7 @@ function chutar(direcaoJogador){
 
     if(modoPergunta){
         if(direcaoJogador === "esquerda"){
-            direcaoGoleiro = "esquerda"; // sempre defende o NÃO
+            direcaoGoleiro = "esquerda";
         } else {
             direcaoGoleiro = "centro";
         }
@@ -208,14 +241,12 @@ function chutar(direcaoJogador){
 
         if(direcaoGoleiro === "esquerda"){
             goleiro.style.left = "250px";
-            goleiro.style.transform = "rotate(-25deg)";
         }
         if(direcaoGoleiro === "centro"){
             goleiro.style.left = "330px";
         }
         if(direcaoGoleiro === "direita"){
             goleiro.style.left = "410px";
-            goleiro.style.transform = "rotate(25deg)";
         }
 
     },100);
@@ -225,9 +256,14 @@ function chutar(direcaoJogador){
         if(modoPergunta){
 
             if(direcaoJogador === "esquerda"){
-                resultado.innerHTML = "Não aceitamos NÃO como resposta 😏<br>Responda novamente, você aceita?";
-            } else if(direcaoJogador === "direita"){
-                resultado.innerHTML = "🎉 Parabéns, você é o melhor!";
+                resultado.innerHTML = "Não aceitamos NÃO como resposta 😏";
+            } 
+            else if(direcaoJogador === "direita"){
+                const pergunta = document.getElementById("perguntaGrande");
+                pergunta.style.top = "50%";
+                pergunta.style.transform = "translate(-50%, -50%)";
+                pergunta.innerHTML = "🎉 VOCÊ É O MELHOR!";
+                confete();
             }
 
         } else {
@@ -237,7 +273,11 @@ function chutar(direcaoJogador){
             } else {
                 resultado.innerHTML = "⚽ GOOOOOL!";
                 gols++;
-                atualizarPlacar();
+                document.getElementById("placar").innerHTML = "Gols: " + gols;
+
+                if(gols === 10){
+                    mostrarPerguntaAnimada();
+                }
             }
 
         }
