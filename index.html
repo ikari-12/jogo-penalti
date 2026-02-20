@@ -46,11 +46,12 @@ h1{color:white;font-size:6vw;}
 
 .opcao{
     position:absolute;
-    top:8vh;
-    font-size:6vw;
+    top:10vh;
+    font-size:7vw;
     font-weight:bold;
     color:white;
     display:none;
+    z-index:5;
 }
 
 #nao{ left:25%; }
@@ -139,6 +140,7 @@ button{
 <div class="campo">
     <div class="gol"></div>
 
+    <!-- AGORA FICAM DENTRO DO CAMPO -->
     <div class="opcao" id="nao">NÃO</div>
     <div class="opcao" id="sim">SIM</div>
 
@@ -195,6 +197,9 @@ function atualizar(){
     if(gols>=10 && !modoPergunta){
         modoPergunta=true;
         meta.innerHTML="VOCÊ ACEITA SER NOSSO PARANINFO?";
+        meta.style.fontSize="9vw";
+
+        // FORÇA APARECER
         nao.style.display="block";
         sim.style.display="block";
     }
@@ -229,7 +234,7 @@ function chutar(dir){
         if(modoPergunta){
 
             if(dir==="esquerda"){
-                resultado.innerHTML="Não aceitamos NÃO como resposta";
+                resultado.innerHTML="Não aceitamos NÃO 😏";
             }else{
                 document.getElementById("vencedor").style.display="block";
                 criarConfetes();
