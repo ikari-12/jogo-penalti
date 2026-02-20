@@ -35,7 +35,6 @@ body {
     box-sizing: border-box;
 }
 
-/* Rede */
 #rede {
     position: absolute;
     width: 100%;
@@ -56,16 +55,70 @@ body {
     );
 }
 
-/* Goleiro */
+/* Goleiro humano */
 #goleiro {
     position: absolute;
-    top: 90px;
+    top: 80px;
     left: 370px;
     width: 60px;
-    height: 80px;
+    height: 120px;
+    transition: all 0.4s ease;
+}
+
+/* Corpo */
+.corpo {
+    position: absolute;
+    top: 30px;
+    left: 15px;
+    width: 30px;
+    height: 60px;
     background: blue;
-    border-radius: 10px;
-    transition: left 0.4s ease;
+    border-radius: 8px;
+}
+
+/* Cabeça */
+.cabeca {
+    position: absolute;
+    top: 0;
+    left: 20px;
+    width: 20px;
+    height: 20px;
+    background: #ffcc99;
+    border-radius: 50%;
+}
+
+/* Braços */
+.braco {
+    position: absolute;
+    top: 35px;
+    width: 15px;
+    height: 8px;
+    background: blue;
+}
+
+.braco.esquerdo {
+    left: 0;
+}
+
+.braco.direito {
+    right: 0;
+}
+
+/* Pernas */
+.perna {
+    position: absolute;
+    bottom: 0;
+    width: 10px;
+    height: 40px;
+    background: black;
+}
+
+.perna.esquerda {
+    left: 15px;
+}
+
+.perna.direita {
+    right: 15px;
 }
 
 /* Bola */
@@ -78,7 +131,17 @@ body {
     background: white;
     border-radius: 50%;
     border: 3px solid black;
-    transition: all 0.5s ease;
+    transition: all 0.6s ease;
+}
+
+/* Rotação da bola */
+.girar {
+    animation: girarBola 0.6s linear;
+}
+
+@keyframes girarBola {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(720deg); }
 }
 
 #mensagem {
@@ -100,7 +163,15 @@ body {
         <div id="rede"></div>
     </div>
 
-    <div id="goleiro"></div>
+    <div id="goleiro">
+        <div class="cabeca"></div>
+        <div class="corpo"></div>
+        <div class="braco esquerdo"></div>
+        <div class="braco direito"></div>
+        <div class="perna esquerda"></div>
+        <div class="perna direita"></div>
+    </div>
+
     <div id="bola"></div>
     <div id="mensagem"></div>
 </div>
@@ -130,7 +201,10 @@ function chutar() {
 
     const defesa = moverGoleiro();
 
-    // Anima bola
+    // Bola gira
+    bola.classList.add("girar");
+
+    // Bola sobe
     bola.style.bottom = "300px";
     bola.style.left = chute + "px";
 
@@ -144,10 +218,14 @@ function chutar() {
         // Reset bola
         bola.style.bottom = "40px";
         bola.style.left = "380px";
+        bola.classList.remove("girar");
+
+        // Volta goleiro para centro
+        goleiro.style.left = "370px";
 
         podeChutar = true;
 
-    }, 800);
+    }, 900);
 }
 
 document.addEventListener("click", chutar);
