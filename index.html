@@ -16,6 +16,17 @@
             margin-top: 10px;
         }
 
+        #placar {
+            font-size: 24px;
+            color: yellow;
+        }
+
+        #meta {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
         .campo {
             position: relative;
             width: 700px;
@@ -99,16 +110,26 @@
         }
 
         #resultado {
-            font-size: 28px;
+            font-size: 26px;
             color: white;
             margin-top: 10px;
-            height: 40px;
+            min-height: 40px;
         }
 
-        #placar {
-            font-size: 24px;
-            color: yellow;
-            margin-top: 5px;
+        .opcao {
+            position: absolute;
+            top: 80px;
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+        }
+
+        #nao {
+            left: 210px;
+        }
+
+        #sim {
+            right: 210px;
         }
 
     </style>
@@ -117,9 +138,13 @@
 
 <h1>⚽ Jogo de Pênalti PRO</h1>
 <div id="placar">Pontos: 0</div>
+<div id="meta">Faça 100 pontos para desbloquear a pergunta</div>
 
 <div class="campo">
     <div class="gol"></div>
+
+    <div class="opcao" id="nao" style="display:none;">NÃO</div>
+    <div class="opcao" id="sim" style="display:none;">SIM</div>
 
     <div class="goleiro" id="goleiro">
         <div class="cabeca"></div>
@@ -143,6 +168,7 @@
 
 let animando = false;
 let pontos = 0;
+let modoPergunta = false;
 
 function desativarBotoes(valor){
     btn1.disabled = valor;
@@ -152,6 +178,13 @@ function desativarBotoes(valor){
 
 function atualizarPlacar(){
     document.getElementById("placar").innerHTML = "Pontos: " + pontos;
+
+    if(pontos >= 100 && !modoPergunta){
+        modoPergunta = true;
+        document.getElementById("meta").innerHTML = "Você aceita ser nosso parainfo?";
+        document.getElementById("nao").style.display = "block";
+        document.getElementById("sim").style.display = "block";
+    }
 }
 
 function chutar(direcaoJogador){
@@ -163,9 +196,6 @@ function chutar(direcaoJogador){
     const goleiro = document.getElementById("goleiro");
     const bola = document.getElementById("bola");
     const resultado = document.getElementById("resultado");
-
-    const opcoes = ['esquerda','centro','direita'];
-    const direcaoGoleiro = opcoes[Math.floor(Math.random()*3)];
 
     resultado.innerHTML = "";
 
@@ -182,6 +212,19 @@ function chutar(direcaoJogador){
 
         bola.style.bottom = "260px";
 
+        let direcaoGoleiro;
+
+        if(modoPergunta){
+            if(direcaoJogador === "esquerda"){
+                direcaoGoleiro = "esquerda";
+            } else if(direcaoJogador === "direita"){
+                direcaoGoleiro = "centro";
+            }
+        } else {
+            const opcoes = ['esquerda','centro','direita'];
+            direcaoGoleiro = opcoes[Math.floor(Math.random()*3)];
+        }
+
         if(direcaoGoleiro === "esquerda"){
             goleiro.style.left = "250px";
             goleiro.style.transform = "rotate(-25deg)";
@@ -194,31 +237,30 @@ function chutar(direcaoJogador){
             goleiro.style.transform = "rotate(25deg)";
         }
 
+        setTimeout(()=>{
+
+            if(modoPergunta){
+                if(direcaoJogador === "esquerda"){
+                    resultado.innerHTML = "Não aceitamos NÃO como resposta 😏<br>Responda novamente, você aceita?";
+                } else if(direcaoJogador === "direita"){
+                    resultado.innerHTML = "🎉 Parabéns, você é o melhor!";
+                }
+            } else {
+                if(direcaoJogador === direcaoGoleiro){
+                    resultado.innerHTML = "🧤 DEFENDEU!";
+                } else {
+                    resultado.innerHTML = "⚽ GOOOOOL!";
+                    pontos += 10;
+                    atualizarPlacar();
+                }
+            }
+
+            animando = false;
+            desativarBotoes(false);
+
+        },400);
+
     },100);
-
-    setTimeout(()=>{
-
-        if(direcaoJogador === direcaoGoleiro){
-            resultado.innerHTML = "🧤 DEFENDEU!";
-        } else {
-            resultado.innerHTML = "⚽ GOOOOOL!";
-            pontos += 10;
-            atualizarPlacar();
-        }
-
-    },500);
-
-    setTimeout(()=>{
-
-        goleiro.style.left = "330px";
-        goleiro.style.transform = "rotate(0deg)";
-        bola.style.left = "340px";
-        bola.style.bottom = "40px";
-
-        animando = false;
-        desativarBotoes(false);
-
-    },1000);
 }
 
 </script>
