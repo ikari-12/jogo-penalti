@@ -14,7 +14,6 @@ body{
 }
 
 h1{color:white;font-size:6vw;}
-
 #placar{font-size:5vw;color:yellow;}
 
 #meta{
@@ -162,6 +161,9 @@ button{
 <div id="resultado"></div>
 <div id="vencedor"></div>
 
+<!-- SOM DE TORCIDA -->
+<audio id="somGol" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c3b9d0c91.mp3?filename=stadium-crowd-cheering-14234.mp3"></audio>
+
 <script>
 
 let gols=0;
@@ -175,6 +177,7 @@ const resultado=document.getElementById("resultado");
 const nao=document.getElementById("nao");
 const sim=document.getElementById("sim");
 const vencedor=document.getElementById("vencedor");
+const somGol=document.getElementById("somGol");
 
 function criarConfetes(){
     setInterval(()=>{
@@ -198,10 +201,8 @@ function atualizar(){
 
     if(gols>=10 && !modoPergunta){
         modoPergunta=true;
-
         meta.innerHTML="VOCÊ ACEITA SER NOSSO PARANINFO?";
         meta.style.fontSize="9vw";
-
         nao.style.display="block";
         sim.style.display="block";
     }
@@ -269,6 +270,11 @@ function chutar(dir){
             if(dir!==defesa){
                 gols++;
                 resultado.innerHTML="⚽ GOOOL!";
+                
+                // 🔊 TOCA SOM
+                somGol.currentTime = 0;
+                somGol.play();
+
                 atualizar();
             }else{
                 resultado.innerHTML="🧤 DEFENDEU!";
